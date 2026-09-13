@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="QuizMaster - Online Quiz Portal. Take interactive quizzes in HTML, CSS, JavaScript, Computer Science, General Knowledge, and Aptitude with instant scoring and detailed solutions.">
+    <title>QuizMaster - Online Quiz Portal | Learn • Practice • Grow</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet & Responsive -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23E82B91'><path d='M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z'/></svg>">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/quiz.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <!-- ==================== 1. UNIVERSAL NAVBAR ==================== -->
+    <header class="navbar" id="navbar">
+        <div class="container nav-container">
+            <!-- Brand Logo -->
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"/>
+                    </svg>
+                </div>
+                <div class="logo-info">
+                    <div class="logo-text">Quiz<span>Master</span></div>
+                    <span class="logo-tagline">Learn &bull; Practice &bull; Grow</span>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="nav-menu">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link active">Home</a></li>
+                    <li><a href="quizzes.html" class="nav-link">Quizzes</a></li>
+                    <li><a href="leaderboard.html" class="nav-link">Leaderboard</a></li>
+                    <li><a href="about.html" class="nav-link">About</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+
+            <!-- Right Controls -->
+            <div class="nav-actions">
+                <button type="button" class="nav-icon-btn btn-search-trigger" id="search-btn" aria-label="Search quizzes" title="Search Quizzes">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </button>
+                
+                <button type="button" class="nav-icon-btn icon-bell-btn" id="bell-btn" aria-label="Notifications" title="Notifications">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                    <span class="nav-badge-dot"></span>
+                </button>
+
+                <!-- Student Profile / Avatar Badge -->
+                <div class="nav-user-profile" title="View Student Profile">
+                    <img src="assets/images/avatar-sneha.jpg" alt="Student profile" class="nav-avatar-img">
+                    <div class="nav-user-info">
+                        <span class="nav-user-name">Hi, Student</span>
+                        <span class="nav-user-role">Learner</span>
+                    </div>
+                    <span class="nav-chevron">▼</span>
+                </div>
+
+                <!-- Mobile Hamburger Button -->
+                <button class="nav-toggle" id="nav-toggle" aria-label="Toggle Navigation Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Drawer Navigation -->
+    <div class="mobile-nav" id="mobile-nav">
+        <a href="index.html" class="nav-link active">Home</a>
+        <a href="quizzes.html" class="nav-link">Quizzes</a>
+        <a href="leaderboard.html" class="nav-link">Leaderboard</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <div class="mobile-nav-actions">
+            <a href="login.html" class="btn btn-secondary btn-block">Student Login</a>
+            <a href="quizzes.html" class="btn btn-primary btn-block">Start Quiz Challenge</a>
+        </div>
+    </div>
+
+    <!-- Search Modal Overlay -->
+    <div class="search-modal-overlay" id="search-modal">
+        <div class="search-modal-box">
+            <div class="search-input-wrap">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--text-muted);">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input type="text" id="quick-search-input" placeholder="Search quizzes (HTML, CSS, JavaScript, CS, GK, Aptitude)..." autofocus>
+                <button type="button" class="btn-close-search" id="close-search-btn">✕</button>
+            </div>
+            <div class="search-results-list" id="quick-search-results">
+                <!-- Populated via js/app.js -->
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- ==================== 2. HERO SECTION ==================== -->
+        <section style="padding: 4rem 0 3.5rem 0; position: relative;">
+            <div class="container">
+                <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 3.5rem; align-items: center;" class="hero-grid">
+                    
+                    <!-- Left Column: Content -->
+                    <div class="hero-content">
+                        <div style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1.1rem; background: var(--primary-pink-soft); color: var(--primary-pink); border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 700; border: 1px solid var(--border-pink); margin-bottom: 1.25rem;">
+                            <span>🌸</span>
+                            <span>Learn &bull; Challenge &bull; Grow</span>
+                        </div>
+
+                        <h1 style="font-size: clamp(2.2rem, 4.5vw, 3.4rem); font-weight: 800; color: var(--navy-dark); line-height: 1.15; margin-bottom: 1.25rem;">
+                            Test Your Knowledge.<br>
+                            <span class="text-gradient">Challenge Yourself.</span>
+                        </h1>
+
+                        <p style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 2rem; max-width: 540px;">
+                            Take interactive quizzes across 6 core technical domains, sharpen your concepts with real-time feedback, and master your subjects with 800+ curated questions!
+                        </p>
+
+                        <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 2.5rem;" class="hero-actions">
+                            <a href="quizzes.html" class="btn btn-primary btn-lg">
+                                <span>Start Quiz</span>
+                                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                </svg>
+                            </a>
+                            <a href="quizzes.html" class="btn btn-secondary btn-lg">
+                                <span>Explore Quizzes</span>
+                            </a>
+                        </div>
+
+                        <!-- Social Proof Row -->
+                        <div style="display: flex; align-items: center; gap: 1rem;" class="hero-social-proof">
+                            <div style="display: flex; align-items: center;">
+                                <img src="assets/images/avatar-priya.jpg" alt="Learner" style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid #FFFFFF; margin-right: -10px; object-fit: cover;">
+                                <img src="assets/images/avatar-rahul.jpg" alt="Learner" style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid #FFFFFF; margin-right: -10px; object-fit: cover;">
+                                <img src="assets/images/avatar-sneha.jpg" alt="Learner" style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid #FFFFFF; margin-right: -10px; object-fit: cover;">
+                                <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--gradient-primary); color: #FFF; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid #FFFFFF;">+10k</div>
+                            </div>
+                            <div style="font-size: 0.9rem; color: var(--text-muted);">
+                                Join <strong style="color: var(--navy-dark);">10,000+ learners</strong> practicing daily!
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Educational Visual -->
+                    <div style="position: relative;">
+                        <div style="background: linear-gradient(135deg, #FFF0F8 0%, #F4EEFF 100%); border-radius: var(--radius-xl); padding: 1.5rem; border: 1.5px solid var(--border); box-shadow: var(--shadow-lg); text-align: center;">
+                            <img src="assets/images/hero-student.jpg" alt="Student studying online quiz with laptop" style="border-radius: var(--radius-lg); width: 100%; height: auto; max-height: 380px; object-fit: cover; box-shadow: var(--shadow-sm);">
+                            
+                            <div style="position: absolute; top: -15px; left: -15px; background: #FFFFFF; padding: 0.75rem 1.25rem; border-radius: var(--radius-md); box-shadow: var(--shadow-md); border: 1px solid var(--border); display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 1.3rem;">🎯</span>
+                                <div style="text-align: left; line-height: 1.1;">
+                                    <strong style="font-size: 0.85rem; color: var(--navy-dark); display: block;">800+ Questions</strong>
+                                    <span style="font-size: 0.75rem; color: var(--text-muted);">40 Curated Sets</span>
+                                </div>
+                            </div>
+
+                            <div style="position: absolute; bottom: -15px; right: -15px; background: #FFFFFF; padding: 0.75rem 1.25rem; border-radius: var(--radius-md); box-shadow: var(--shadow-md); border: 1px solid var(--border); display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 1.3rem;">🏆</span>
+                                <div style="text-align: left; line-height: 1.1;">
+                                    <strong style="font-size: 0.85rem; color: var(--navy-dark); display: block;">Instant Feedback</strong>
+                                    <span style="font-size: 0.75rem; color: var(--text-muted);">Detailed Solutions</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 3. STATS STRIP ==================== -->
+        <section style="padding: 2.5rem 0; background: #FFFFFF; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+            <div class="container">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem;" class="stats-grid">
+                    <div style="text-align: center;">
+                        <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: var(--primary-pink); line-height: 1;">800+</div>
+                        <div style="font-size: 0.9rem; color: var(--text-muted); font-weight: 600; margin-top: 0.35rem;">Curated Questions</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: var(--primary-purple); line-height: 1;">6</div>
+                        <div style="font-size: 0.9rem; color: var(--text-muted); font-weight: 600; margin-top: 0.35rem;">Core Domains</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: var(--success); line-height: 1;">40</div>
+                        <div style="font-size: 0.9rem; color: var(--text-muted); font-weight: 600; margin-top: 0.35rem;">Challenge Sets</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: var(--navy-dark); line-height: 1;">100%</div>
+                        <div style="font-size: 0.9rem; color: var(--text-muted); font-weight: 600; margin-top: 0.35rem;">Free & Interactive</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 4. POPULAR CATEGORIES ==================== -->
+        <section style="padding: 5rem 0;">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">🔥 Explore Categories</span>
+                    <h2 class="section-title">Popular Quiz Tracks</h2>
+                    <p class="section-subtitle">Select a subject to test your fundamentals with timed challenges and step-by-step solutions.</p>
+                </div>
+
+                <div class="categories-grid">
+                    
+                    <!-- HTML Card -->
+                    <div class="category-card cat-card-theme-html" onclick="window.location.href='quizzes.html?category=HTML'" role="button" tabindex="0">
+                        <div class="cat-card-header">
+                            <div class="cat-icon-chip cat-icon-html">
+                                <svg viewBox="0 0 32 32" class="cat-svg-icon" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.5 3.5L7.7 27.5L16 29.8L24.3 27.5L26.5 3.5H5.5Z" fill="#E44D26"/>
+                                    <path d="M16 5.5V27.6L22.5 25.7L24.3 5.5H16Z" fill="#F16529"/>
+                                    <path d="M16 11.8H11.2L11.5 15.5H16V11.8ZM16 19.3H13.8L13.6 17.2H11.7L12 21.6H16V19.3Z" fill="#EBEBEB"/>
+                                    <path d="M16 11.8V15.5H20.3L19.9 19.8L16 20.9V23.3L22.3 21.6L22.8 11.8H16Z" fill="#FFFFFF"/>
+                                    <path d="M10.9 8.2H21.1L21.4 5.5H10.6L10.9 8.2Z" fill="#EBEBEB"/>
+                                    <path d="M16 5.5H21.4L21.1 8.2H16V5.5Z" fill="#FFFFFF"/>
+                                </svg>
+                            </div>
+                            <div class="cat-header-badges">
+                                <span class="cat-domain-badge">Markup</span>
+                                <span class="cat-diff-badge easy">Easy</span>
+                            </div>
+                        </div>
+                        <div class="cat-card-body">
+                            <h3 class="cat-title">HTML5 Fundamentals</h3>
+                            <p class="cat-desc">Master document structure, semantic tags, forms, media, and HTML5 modern APIs.</p>
+                            <div class="cat-stats-row">
+                                <div class="cat-stat-chip"><strong>5</strong><span>Sets</span></div>
+                                <div class="cat-stat-chip"><strong>20</strong><span>Qs/Set</span></div>
+                                <div class="cat-stat-chip"><strong>100</strong><span>Total Qs</span></div>
+                            </div>
+                            <div class="cat-card-footer">
+                                <span class="cat-action-text">
+                                    <span>Explore 5 Sets</span>
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                </span>
+                                <span class="btn-start-circle">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CSS Card -->
+                    <div class="category-card cat-card-theme-css" onclick="window.location.href='quizzes.html?category=CSS'" role="button" tabindex="0">
+                        <div class="cat-card-header">
+                            <div class="cat-icon-chip cat-icon-css">
+                                <svg viewBox="0 0 32 32" class="cat-svg-icon" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.5 3.5L7.7 27.5L16 29.8L24.3 27.5L26.5 3.5H5.5Z" fill="#1572B6"/>
+                                    <path d="M16 5.5V27.6L22.5 25.7L24.3 5.5H16Z" fill="#33A9DC"/>
+                                    <path d="M10.6 7.5H21.4L21.1 10.5H16V10.5H10.9L10.6 7.5ZM16 13.5V16.5H19.8L19.4 20.5L16 21.5V24.2L21.8 22.5L22.4 13.5H16ZM11.1 13.5L11.4 16.5H16V13.5H11.1ZM16 21.5L13.2 20.7L13 18.5H10.4L10.8 22.8L16 24.2V21.5Z" fill="#FFFFFF"/>
+                                    <path d="M10.6 7.5H16V10.5H10.9L10.6 7.5ZM11.1 13.5L11.4 16.5H16V13.5H11.1ZM16 21.5L13.2 20.7L13 18.5H10.4L10.8 22.8L16 24.2V21.5Z" fill="#EBEBEB"/>
+                                </svg>
+                            </div>
+                            <div class="cat-header-badges">
+                                <span class="cat-domain-badge">Styling</span>
+                                <span class="cat-diff-badge easy">Easy</span>
+                            </div>
+                        </div>
+                        <div class="cat-card-body">
+                            <h3 class="cat-title">CSS3 &amp; Styling</h3>
+                            <p class="cat-desc">Deep dive into Flexbox, CSS Grid, animations, specificity, box model, and responsive design.</p>
+                            <div class="cat-stats-row">
+                                <div class="cat-stat-chip"><strong>5</strong><span>Sets</span></div>
+                                <div class="cat-stat-chip"><strong>20</strong><span>Qs/Set</span></div>
+                                <div class="cat-stat-chip"><strong>100</strong><span>Total Qs</span></div>
+                            </div>
+                            <div class="cat-card-footer">
+                                <span class="cat-action-text">
+                                    <span>Explore 5 Sets</span>
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                </span>
+                                <span class="btn-start-circle">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- JavaScript Card -->
+                    <div class="category-card cat-card-theme-js" onclick="window.location.href='quizzes.html?category=JavaScript'" role="button" tabindex="0">
+                        <div class="cat-card-header">
+                            <div class="cat-icon-chip cat-icon-js">
+                                <svg viewBox="0 0 32 32" class="cat-svg-icon" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="32" height="32" rx="6" fill="#F7DF1E"/>
+                                    <path d="M9.5 21.8c0 2.8 1.7 4.4 4.5 4.4 2.5 0 3.8-1.4 3.8-3.2v-8.2h-2.9v8c0 1-.5 1.5-1.4 1.5-.9 0-1.4-.5-1.4-1.4V21.8H9.5zm9.6 2.3c1 1.1 2.4 1.8 4 1.8 2.3 0 3.5-1.1 3.5-2.8 0-1.8-1.1-2.4-3.2-3.3-2.3-1-3.8-1.8-3.8-4 0-2.2 1.7-4.1 4.2-4.1 1.8 0 3.2.6 4.2 1.9l-1.8 1.8c-.8-.9-1.5-1.3-2.4-1.3-1.3 0-2 .8-2 1.8 0 1.3.9 1.9 2.8 2.7 2.7 1.1 4.2 2 4.2 4.6 0 2.7-2 4.3-4.7 4.3-2.2 0-3.8-.8-5-2.3l2-2.1z" fill="#000000"/>
+                                </svg>
+                            </div>
+                            <div class="cat-header-badges">
+                                <span class="cat-domain-badge">Programming</span>
+                                <span class="cat-diff-badge medium">Medium</span>
+                            </div>
+                        </div>
+                        <div class="cat-card-body">
+                            <h3 class="cat-title">JavaScript (ES6+)</h3>
+                            <p class="cat-desc">Level up your ES6+, closures, async/await, promises, DOM manipulation, and modern web logic.</p>
+                            <div class="cat-stats-row">
+                                <div class="cat-stat-chip"><strong>5</strong><span>Sets</span></div>
+                                <div class="cat-stat-chip"><strong>20</strong><span>Qs/Set</span></div>
+                                <div class="cat-stat-chip"><strong>100</strong><span>Total Qs</span></div>
+                            </div>
+                            <div class="cat-card-footer">
+                                <span class="cat-action-text">
+                                    <span>Explore 5 Sets</span>
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                </span>
+                                <span class="btn-start-circle">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Computer Science Card -->
+                    <div class="category-card cat-card-theme-cs" onclick="window.location.href='quizzes.html?category=Computer%20Science'" role="button" tabindex="0">
+                        <div class="cat-card-header">
+                            <div class="cat-icon-chip cat-icon-cs">
+                                <svg viewBox="0 0 32 32" class="cat-svg-icon" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="32" height="32" rx="7" fill="#7C3AED"/>
+                                    <rect x="5" y="6" width="22" height="15" rx="3" fill="#1E1B4B" stroke="#A78BFA" stroke-width="1.5"/>
+                                    <path d="M9 11.5L12 14L9 16.5M14 16.5H19" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <circle cx="21" cy="9.5" r="1.5" fill="#34D399"/>
+                                    <path d="M12 21V25M20 21V25M8 25H24" stroke="#DDD6FE" stroke-width="1.8" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="cat-header-badges">
+                                <span class="cat-domain-badge">Core CS</span>
+                                <span class="cat-diff-badge medium">Medium</span>
+                            </div>
+                        </div>
+                        <div class="cat-card-body">
+                            <h3 class="cat-title">Computer Science Core</h3>
+                            <p class="cat-desc">Test your knowledge of Data Structures, Algorithms, OS, DBMS, and Computer Networks.</p>
+                            <div class="cat-stats-row">
+                                <div class="cat-stat-chip"><strong>5</strong><span>Sets</span></div>
+                                <div class="cat-stat-chip"><strong>20</strong><span>Qs/Set</span></div>
+                                <div class="cat-stat-chip"><strong>100</strong><span>Total Qs</span></div>
+                            </div>
+                            <div class="cat-card-footer">
+                                <span class="cat-action-text">
+                                    <span>Explore 5 Sets</span>
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                </span>
+                                <span class="btn-start-circle">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- General Knowledge Card -->
+                    <div class="category-card cat-card-theme-gk" onclick="window.location.href='quizzes.html?category=General%20Knowledge'" role="button" tabindex="0">
+                        <div class="cat-card-header">
+                            <div class="cat-icon-chip cat-icon-gk">
+                                <svg viewBox="0 0 32 32" class="cat-svg-icon" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="32" height="32" rx="7" fill="#0D9488"/>
+                                    <circle cx="16" cy="16" r="10" fill="#115E59" stroke="#5EEAD4" stroke-width="1.5"/>
+                                    <path d="M16 6C12.5 9.5 11 12.5 11 16C11 19.5 12.5 22.5 16 26C19.5 22.5 21 19.5 21 16C21 12.5 19.5 9.5 16 6Z" stroke="#99F6E4" stroke-width="1.2"/>
+                                    <path d="M6.5 13H25.5M6.5 19H25.5" stroke="#99F6E4" stroke-width="1.2"/>
+                                    <circle cx="23" cy="9" r="4.5" fill="#F59E0B" stroke="#FEF3C7" stroke-width="1.2"/>
+                                    <path d="M23 7V11M21 9H25" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="cat-header-badges">
+                                <span class="cat-domain-badge">General</span>
+                                <span class="cat-diff-badge easy">Easy</span>
+                            </div>
+                        </div>
+                        <div class="cat-card-body">
+                            <h3 class="cat-title">General Knowledge</h3>
+                            <p class="cat-desc">Broaden your awareness across Science, History, Geography, Inventions, and World trivia.</p>
+                            <div class="cat-stats-row">
+                                <div class="cat-stat-chip"><strong>10</strong><span>Sets</span></div>
+                                <div class="cat-stat-chip"><strong>20</strong><span>Qs/Set</span></div>
+                                <div class="cat-stat-chip"><strong>200</strong><span>Total Qs</span></div>
+                            </div>
+                            <div class="cat-card-footer">
+                                <span class="cat-action-text">
+                                    <span>Explore 10 Sets</span>
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                </span>
+                                <span class="btn-start-circle">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Aptitude & Reasoning Card -->
+                    <div class="category-card cat-card-theme-aptitude" onclick="window.location.href='quizzes.html?category=Aptitude'" role="button" tabindex="0">
+                        <div class="cat-card-header">
+                            <div class="cat-icon-chip cat-icon-aptitude">
+                                <svg viewBox="0 0 32 32" class="cat-svg-icon" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="32" height="32" rx="7" fill="#4F46E5"/>
+                                    <path d="M6 24H26M9 19L13.5 13.5L17.5 17L23 10" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <circle cx="9" cy="19" r="2" fill="#38BDF8"/>
+                                    <circle cx="13.5" cy="13.5" r="2" fill="#818CF8"/>
+                                    <circle cx="17.5" cy="17" r="2" fill="#C084FC"/>
+                                    <circle cx="23" cy="10" r="2.5" fill="#F43F5E"/>
+                                </svg>
+                            </div>
+                            <div class="cat-header-badges">
+                                <span class="cat-domain-badge">Aptitude</span>
+                                <span class="cat-diff-badge medium">Easy–Med</span>
+                            </div>
+                        </div>
+                        <div class="cat-card-body">
+                            <h3 class="cat-title">Aptitude &amp; Logic</h3>
+                            <p class="cat-desc">Sharpen your quantitative skills, logical deductions, number series, and analytical speed.</p>
+                            <div class="cat-stats-row">
+                                <div class="cat-stat-chip"><strong>10</strong><span>Sets</span></div>
+                                <div class="cat-stat-chip"><strong>20</strong><span>Qs/Set</span></div>
+                                <div class="cat-stat-chip"><strong>200</strong><span>Total Qs</span></div>
+                            </div>
+                            <div class="cat-card-footer">
+                                <span class="cat-action-text">
+                                    <span>Explore 10 Sets</span>
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                </span>
+                                <span class="btn-start-circle">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div style="text-align: center; margin-top: 3rem;">
+                    <a href="quizzes.html" class="btn btn-primary btn-lg">
+                        <span>View All 40 Quiz Sets</span>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 5. HOW IT WORKS ==================== -->
+        <section style="padding: 5rem 0; background: #FFFFFF; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);" id="how-it-works">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">💡 Seamless Flow</span>
+                    <h2 class="section-title">How QuizMaster Works</h2>
+                    <p class="section-subtitle">A simple, intuitive four-step journey to practice, evaluate, and level up your mastery.</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.75rem;" class="stats-grid">
+                    <div class="card" style="text-align: center;">
+                        <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--primary-pink-soft); color: var(--primary-pink); font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto;">1</div>
+                        <h4 style="font-size: 1.1rem; color: var(--navy-dark); margin-bottom: 0.5rem;">Choose Category</h4>
+                        <p style="font-size: 0.88rem; color: var(--text-muted);">Pick from 6 core technical and cognitive learning tracks.</p>
+                    </div>
+
+                    <div class="card" style="text-align: center;">
+                        <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--primary-purple-soft); color: var(--primary-purple); font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto;">2</div>
+                        <h4 style="font-size: 1.1rem; color: var(--navy-dark); margin-bottom: 0.5rem;">Select Set</h4>
+                        <p style="font-size: 0.88rem; color: var(--text-muted);">Each set contains exactly 20 targeted questions with a timer.</p>
+                    </div>
+
+                    <div class="card" style="text-align: center;">
+                        <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--success-bg); color: var(--success); font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto;">3</div>
+                        <h4 style="font-size: 1.1rem; color: var(--navy-dark); margin-bottom: 0.5rem;">Solve Live Quiz</h4>
+                        <p style="font-size: 0.88rem; color: var(--text-muted);">Use the Question Navigator, bookmark tricky items, and track time.</p>
+                    </div>
+
+                    <div class="card" style="text-align: center;">
+                        <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--warning-bg); color: var(--warning); font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto;">4</div>
+                        <h4 style="font-size: 1.1rem; color: var(--navy-dark); margin-bottom: 0.5rem;">Instant Review</h4>
+                        <p style="font-size: 0.88rem; color: var(--text-muted);">Get comprehensive score cards, detailed rationales, and badges.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 6. CTA BANNER ==================== -->
+        <section style="padding: 5rem 0;">
+            <div class="container">
+                <div style="background: var(--gradient-primary); border-radius: var(--radius-xl); padding: 3.5rem 3rem; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2rem; box-shadow: var(--shadow-lg);">
+                    <div>
+                        <h2 style="font-size: clamp(1.8rem, 3.5vw, 2.4rem); color: #FFFFFF; margin-bottom: 0.5rem;">Ready to Test Your Knowledge?</h2>
+                        <p style="color: rgba(255, 255, 255, 0.9); font-size: 1.05rem; max-width: 580px;">Choose from 40 curated quiz challenges and start mastering your skills today with instant feedback.</p>
+                    </div>
+                    <div>
+                        <a href="quizzes.html" class="btn btn-secondary btn-lg" style="background: #FFFFFF; color: var(--navy-dark); font-weight: 700; border: none; box-shadow: var(--shadow-md);">
+                            <span>Start Free Quiz</span>
+                            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== 7. UNIVERSAL FOOTER ==================== -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- Left Brand Column -->
+                <div class="footer-brand-col">
+                    <a href="index.html" class="logo">
+                        <div class="logo-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"/>
+                            </svg>
+                        </div>
+                        <div class="logo-info">
+                            <div class="logo-text">Quiz<span>Master</span></div>
+                            <span class="logo-tagline">Learn &bull; Practice &bull; Grow</span>
+                        </div>
+                    </a>
+                    <p class="footer-desc">
+                        QuizMaster is your learning companion to practice, improve, and achieve your goals with interactive quizzes and detailed step-by-step explanations.
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="footer-col-title">Quick Links</h4>
+                    <ul class="footer-links-list">
+                        <li><a href="index.html" class="footer-link">Home</a></li>
+                        <li><a href="quizzes.html" class="footer-link">Quizzes</a></li>
+                        <li><a href="leaderboard.html" class="footer-link">Leaderboard</a></li>
+                        <li><a href="about.html" class="footer-link">About Us</a></li>
+                        <li><a href="contact.html" class="footer-link">Contact Support</a></li>
+                    </ul>
+                </div>
+
+                <!-- Popular Categories -->
+                <div>
+                    <h4 class="footer-col-title">Popular Tracks</h4>
+                    <ul class="footer-links-list">
+                        <li><a href="quizzes.html?category=HTML" class="footer-link">HTML Fundamentals</a></li>
+                        <li><a href="quizzes.html?category=CSS" class="footer-link">CSS Styling</a></li>
+                        <li><a href="quizzes.html?category=JavaScript" class="footer-link">JavaScript Master</a></li>
+                        <li><a href="quizzes.html?category=Computer%20Science" class="footer-link">Computer Science</a></li>
+                        <li><a href="quizzes.html?category=General%20Knowledge" class="footer-link">General Knowledge</a></li>
+                        <li><a href="quizzes.html?category=Aptitude" class="footer-link">Aptitude & Reasoning</a></li>
+                    </ul>
+                </div>
+
+                <!-- Connect With Us -->
+                <div>
+                    <h4 class="footer-col-title">Connect With Us</h4>
+                    <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                        Let's build a smarter tomorrow together.
+                    </p>
+                    <div class="footer-social-row">
+                        <a href="https://instagram.com" target="_blank" class="footer-social-icon" aria-label="Instagram">📸</a>
+                        <a href="https://youtube.com" target="_blank" class="footer-social-icon" aria-label="YouTube">▶️</a>
+                        <a href="https://twitter.com" target="_blank" class="footer-social-icon" aria-label="Twitter">🐦</a>
+                        <a href="https://linkedin.com" target="_blank" class="footer-social-icon" aria-label="LinkedIn">💼</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Legal Bar -->
+            <div class="footer-bottom-bar">
+                <div class="footer-copyright">&copy; 2026 QuizMaster. All rights reserved.</div>
+                <ul class="footer-legal-links">
+                    <li><a href="about.html">Privacy Policy</a></li>
+                    <li><a href="about.html">Terms of Service</a></li>
+                    <li><a href="contact.html">Help & FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/data/question-bank.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

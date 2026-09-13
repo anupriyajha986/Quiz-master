@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="QuizMaster - Select Your Quiz Challenge. Explore 40 curated sets across 6 technical and aptitude categories.">
+    <title>QuizMaster - Select Your Quiz Challenge | 40 Sets, 800 Questions</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet & Responsive -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23E82B91'><path d='M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z'/></svg>">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/quiz.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <!-- ==================== 1. UNIVERSAL NAVBAR ==================== -->
+    <header class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"/>
+                    </svg>
+                </div>
+                <div class="logo-info">
+                    <div class="logo-text">Quiz<span>Master</span></div>
+                    <span class="logo-tagline">Learn &bull; Practice &bull; Grow</span>
+                </div>
+            </a>
+
+            <nav class="nav-menu">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="quizzes.html" class="nav-link active">Quizzes</a></li>
+                    <li><a href="leaderboard.html" class="nav-link">Leaderboard</a></li>
+                    <li><a href="about.html" class="nav-link">About</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <button type="button" class="nav-icon-btn btn-search-trigger" id="search-btn" aria-label="Search quizzes" title="Search Quizzes">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </button>
+                
+                <button type="button" class="nav-icon-btn icon-bell-btn" id="bell-btn" aria-label="Notifications" title="Notifications">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                    <span class="nav-badge-dot"></span>
+                </button>
+
+                <div class="nav-user-profile" title="View Student Profile">
+                    <img src="assets/images/avatar-sneha.jpg" alt="Student profile" class="nav-avatar-img">
+                    <div class="nav-user-info">
+                        <span class="nav-user-name">Hi, Student</span>
+                        <span class="nav-user-role">Learner</span>
+                    </div>
+                    <span class="nav-chevron">▼</span>
+                </div>
+
+                <button class="nav-toggle" id="nav-toggle" aria-label="Toggle Navigation Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-nav" id="mobile-nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="quizzes.html" class="nav-link active">Quizzes</a>
+        <a href="leaderboard.html" class="nav-link">Leaderboard</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <div class="mobile-nav-actions">
+            <a href="login.html" class="btn btn-secondary btn-block">Student Login</a>
+            <a href="quizzes.html" class="btn btn-primary btn-block">Explore Sets</a>
+        </div>
+    </div>
+
+    <!-- Search Modal Overlay -->
+    <div class="search-modal-overlay" id="search-modal">
+        <div class="search-modal-box">
+            <div class="search-input-wrap">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--text-muted);">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input type="text" id="quick-search-input" placeholder="Search quizzes (HTML, CSS, JavaScript, CS)..." autofocus>
+                <button type="button" class="btn-close-search" id="close-search-btn">✕</button>
+            </div>
+            <div class="search-results-list" id="quick-search-results"></div>
+        </div>
+    </div>
+
+    <main>
+        <!-- ==================== HEADER & SEARCH SECTION ==================== -->
+        <section style="padding: 3.5rem 0 2rem 0;">
+            <div class="container">
+                <div class="section-header" style="margin-bottom: 2.25rem;">
+                    <span class="section-tag">🎯 Interactive Challenges</span>
+                    <h1 class="section-title">Select Your Quiz Challenge</h1>
+                    <p class="section-subtitle">
+                        Choose a domain, pick a challenge set, and start testing your knowledge with instant scoring!
+                    </p>
+                </div>
+
+                <!-- Live Search & Filter Bar -->
+                <div style="background: #FFFFFF; border: 1.5px solid var(--border); border-radius: var(--radius-xl); padding: 1.35rem 1.75rem; box-shadow: 0 4px 20px rgba(24, 35, 74, 0.05); display: flex; flex-direction: column; gap: 1.1rem; margin-bottom: 2.5rem;">
+                    
+                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                        <!-- Search Input -->
+                        <div class="form-input-wrap" style="flex: 1; min-width: 280px; position: relative;">
+                            <span class="form-input-icon" style="font-size: 1.1rem;">🔍</span>
+                            <input type="text" id="category-search" class="form-input form-input-with-icon" placeholder="Search sets by keyword (e.g. Flexbox, DOM, SQL, Logic)..." style="font-size: 0.95rem; border-radius: var(--radius-md); border-color: var(--border);">
+                        </div>
+                    </div>
+
+                    <!-- Category Pills Filter -->
+                    <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; border-top: 1px solid var(--border-light); padding-top: 1rem;">
+                        <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Filter:</span>
+                        <button type="button" class="pill-btn btn btn-sm btn-ghost active" data-filter="all" style="border-radius: var(--radius-full); font-weight: 700;">All (6 Tracks)</button>
+                        <button type="button" class="pill-btn btn btn-sm btn-ghost" data-filter="HTML" style="border-radius: var(--radius-full); font-weight: 600;">🌐 HTML</button>
+                        <button type="button" class="pill-btn btn btn-sm btn-ghost" data-filter="CSS" style="border-radius: var(--radius-full); font-weight: 600;">🎨 CSS</button>
+                        <button type="button" class="pill-btn btn btn-sm btn-ghost" data-filter="JavaScript" style="border-radius: var(--radius-full); font-weight: 600;">⚡ JavaScript</button>
+                        <button type="button" class="pill-btn btn btn-sm btn-ghost" data-filter="Computer Science" style="border-radius: var(--radius-full); font-weight: 600;">💻 Computer Science</button>
+                        <button type="button" class="pill-btn btn btn-sm btn-ghost" data-filter="General Knowledge" style="border-radius: var(--radius-full); font-weight: 600;">💡 General Knowledge</button>
+                        <button type="button" class="pill-btn btn btn-sm btn-ghost" data-filter="Aptitude" style="border-radius: var(--radius-full); font-weight: 600;">📊 Aptitude</button>
+                    </div>
+
+                </div>
+
+                <!-- Grid Container (Populated dynamically via js/quizzes.js) -->
+                <div id="all-categories-grid" class="categories-grid" style="margin-bottom: 4rem;">
+                    <!-- Populated via js/quizzes.js -->
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==================== SETS SELECTION MODAL POPUP ==================== -->
+        <div class="sets-modal-overlay" id="sets-modal" role="dialog" aria-modal="true" aria-labelledby="modal-category-title" aria-hidden="true">
+            <div class="sets-modal-box">
+                <!-- Modal Top Header Strip -->
+                <div class="sets-modal-header" id="modal-header-strip">
+                    <div class="modal-header-visual">
+                        <div class="modal-icon-badge" id="modal-category-icon">🌐</div>
+                        <div class="modal-header-info">
+                            <div class="modal-header-top-row">
+                                <span class="modal-domain-tag" id="modal-category-domain">Frontend Track</span>
+                                <span class="modal-diff-badge" id="modal-category-diff">Easy &bull; 15 Mins</span>
+                            </div>
+                            <h2 class="modal-category-title" id="modal-category-title">HTML5 Fundamentals</h2>
+                            <p class="modal-category-subtitle" id="modal-category-subtitle">Explore 5 Curated Sets &bull; 20 Questions Per Set &bull; Instant Scoring</p>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn-close-modal" id="close-sets-modal-btn" aria-label="Close Sets Dialog" title="Close (Esc)">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Modal Subheader with Search & Filter Bar -->
+                <div class="sets-modal-toolbar">
+                    <div class="sets-search-box">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--text-muted);">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input type="text" id="modal-set-search" placeholder="Search sets (e.g. Set 1, Flexbox, OOP, Tags)...">
+                        <button type="button" class="btn-clear-set-search" id="clear-set-search" style="display: none;">✕</button>
+                    </div>
+
+                    <div class="sets-progress-summary" id="modal-progress-summary">
+                        <span class="modal-progress-text" id="modal-progress-text">0 / 5 Sets Completed</span>
+                        <div class="modal-progress-bar">
+                            <div class="modal-progress-fill" id="modal-progress-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Sets Grid Body (Scrollable) -->
+                <div class="sets-modal-body">
+                    <div class="sets-grid-container" id="modal-sets-grid">
+                        <!-- Populated dynamically via js/quizzes.js -->
+                    </div>
+                </div>
+
+                <!-- Modal Bottom Action Strip -->
+                <div class="sets-modal-footer">
+                    <div class="modal-footer-tip">
+                        <span>💡 <strong>Tip:</strong> Each set contains 20 questions with a 15-minute timer and in-depth solution explanations.</span>
+                    </div>
+                    <button type="button" class="btn btn-outline btn-sm" id="footer-close-modal-btn">
+                        <span>Close Window</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ==================== UNIVERSAL FOOTER ==================== -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand-col">
+                    <a href="index.html" class="logo">
+                        <div class="logo-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"/>
+                            </svg>
+                        </div>
+                        <div class="logo-info">
+                            <div class="logo-text">Quiz<span>Master</span></div>
+                            <span class="logo-tagline">Learn &bull; Practice &bull; Grow</span>
+                        </div>
+                    </a>
+                    <p class="footer-desc">
+                        QuizMaster is your learning companion to practice, improve, and achieve your goals with interactive quizzes and detailed step-by-step explanations.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="footer-col-title">Quick Links</h4>
+                    <ul class="footer-links-list">
+                        <li><a href="index.html" class="footer-link">Home</a></li>
+                        <li><a href="quizzes.html" class="footer-link">Quizzes</a></li>
+                        <li><a href="leaderboard.html" class="footer-link">Leaderboard</a></li>
+                        <li><a href="about.html" class="footer-link">About Us</a></li>
+                        <li><a href="contact.html" class="footer-link">Contact Support</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-col-title">Popular Tracks</h4>
+                    <ul class="footer-links-list">
+                        <li><a href="quizzes.html?category=HTML" class="footer-link">HTML Fundamentals</a></li>
+                        <li><a href="quizzes.html?category=CSS" class="footer-link">CSS Styling</a></li>
+                        <li><a href="quizzes.html?category=JavaScript" class="footer-link">JavaScript Master</a></li>
+                        <li><a href="quizzes.html?category=Computer%20Science" class="footer-link">Computer Science</a></li>
+                        <li><a href="quizzes.html?category=General%20Knowledge" class="footer-link">General Knowledge</a></li>
+                        <li><a href="quizzes.html?category=Aptitude" class="footer-link">Aptitude & Reasoning</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-col-title">Connect With Us</h4>
+                    <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                        Let's build a smarter tomorrow together.
+                    </p>
+                    <div class="footer-social-row">
+                        <a href="https://instagram.com" target="_blank" class="footer-social-icon" aria-label="Instagram">📸</a>
+                        <a href="https://youtube.com" target="_blank" class="footer-social-icon" aria-label="YouTube">▶️</a>
+                        <a href="https://twitter.com" target="_blank" class="footer-social-icon" aria-label="Twitter">🐦</a>
+                        <a href="https://linkedin.com" target="_blank" class="footer-social-icon" aria-label="LinkedIn">💼</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom-bar">
+                <div class="footer-copyright">&copy; 2026 QuizMaster. All rights reserved.</div>
+                <ul class="footer-legal-links">
+                    <li><a href="about.html">Privacy Policy</a></li>
+                    <li><a href="about.html">Terms of Service</a></li>
+                    <li><a href="contact.html">Help & FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/data/question-bank.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/quizzes.js"></script>
+</body>
+</html>

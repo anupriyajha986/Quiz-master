@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 160" width="100%" height="100%">
+  <defs>
+    <linearGradient id="js-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="45%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#EA580C"/>
+    </linearGradient>
+    <linearGradient id="js-glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.04"/>
+    </linearGradient>
+    <filter id="js-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#92400E" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="400" height="160" rx="16" fill="url(#js-bg)"/>
+  
+  <!-- Ambient circles & lightning bolts -->
+  <circle cx="360" cy="25" r="75" fill="url(#js-glow)"/>
+  <circle cx="35" cy="135" r="55" fill="url(#js-glow)"/>
+  <path d="M-15 50 Q 110 10 210 70 T 415 40" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" stroke-dasharray="3 3"/>
+  
+  <!-- JS Code Snippet Pills in Background -->
+  <rect x="24" y="24" width="94" height="24" rx="6" fill="rgba(255,255,255,0.18)"/>
+  <text x="32" y="40" font-family="'Fira Code', monospace" font-size="11" font-weight="600" fill="#FEF3C7">async / await</text>
+
+  <rect x="24" y="112" width="76" height="22" rx="6" fill="rgba(255,255,255,0.18)"/>
+  <text x="32" y="127" font-family="'Fira Code', monospace" font-size="11" font-weight="600" fill="#FEF3C7">() =&gt; Promise</text>
+
+  <!-- Floating Terminal & JS Execution Preview -->
+  <g transform="translate(130, 20)" filter="url(#js-shadow)">
+    <rect width="140" height="118" rx="10" fill="#1E293B"/>
+    <!-- Terminal Bar -->
+    <rect width="140" height="22" rx="10" fill="#0F172A"/>
+    <rect y="12" width="140" height="10" fill="#0F172A"/>
+    <circle cx="12" cy="11" r="3.5" fill="#EF4444"/>
+    <circle cx="22" cy="11" r="3.5" fill="#F59E0B"/>
+    <circle cx="32" cy="11" r="3.5" fill="#10B981"/>
+    
+    <!-- Code Lines -->
+    <text x="12" y="38" font-family="'Fira Code', monospace" font-size="9" font-weight="600" fill="#FBBF24">const</text>
+    <text x="44" y="38" font-family="'Fira Code', monospace" font-size="9" fill="#93C5FD">quiz</text>
+    <text x="70" y="38" font-family="'Fira Code', monospace" font-size="9" fill="#F43F5E">=</text>
+    <text x="80" y="38" font-family="'Fira Code', monospace" font-size="9" fill="#34D399">new</text>
+    <text x="100" y="38" font-family="'Fira Code', monospace" font-size="9" fill="#FCD34D">App();</text>
+
+    <text x="12" y="54" font-family="'Fira Code', monospace" font-size="9" fill="#94A3B8">// ES6+ Scope &amp; Closures</text>
+    
+    <rect x="12" y="66" width="116" height="20" rx="4" fill="#334155"/>
+    <text x="18" y="80" font-family="'Fira Code', monospace" font-size="9" font-weight="700" fill="#34D399">&gt; Status: 200 OK ✨</text>
+
+    <rect x="12" y="94" width="70" height="14" rx="4" fill="#F59E0B" fill-opacity="0.2"/>
+    <text x="18" y="104" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" font-weight="700" fill="#FBBF24">ES6+ Modern JS</text>
+  </g>
+
+  <!-- 3D JavaScript Badge Emblem -->
+  <g transform="translate(295, 25)" filter="url(#js-shadow)">
+    <circle cx="45" cy="45" r="42" fill="#FFFFFF" fill-opacity="0.2"/>
+    <!-- Yellow JS square icon -->
+    <rect x="15" y="15" width="60" height="60" rx="12" fill="#F7DF1E"/>
+    <text x="35" y="61" font-family="'Plus Jakarta Sans', sans-serif" font-size="34" font-weight="900" fill="#000000">JS</text>
+    <!-- Lightning spark badge -->
+    <circle cx="64" cy="22" r="12" fill="#FFFFFF"/>
+    <path d="M64 14 L60 22 L65 22 L62 30 L69 20 L64 20 Z" fill="#F59E0B"/>
+  </g>
+</svg>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="QuizMaster - Quiz Results & Performance Analysis. View your score, accuracy %, and step-by-step solutions.">
+    <title>QuizMaster - Quiz Results & Score</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet & Responsive -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23E82B91'><path d='M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z'/></svg>">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/quiz.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <!-- ==================== 1. UNIVERSAL NAVBAR ==================== -->
+    <header class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"/>
+                    </svg>
+                </div>
+                <div class="logo-info">
+                    <div class="logo-text">Quiz<span>Master</span></div>
+                    <span class="logo-tagline">Learn &bull; Practice &bull; Grow</span>
+                </div>
+            </a>
+
+            <nav class="nav-menu">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="quizzes.html" class="nav-link active">Quizzes</a></li>
+                    <li><a href="leaderboard.html" class="nav-link">Leaderboard</a></li>
+                    <li><a href="about.html" class="nav-link">About</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <button type="button" class="nav-icon-btn btn-search-trigger" id="search-btn" aria-label="Search quizzes" title="Search Quizzes">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </button>
+                
+                <button type="button" class="nav-icon-btn icon-bell-btn" id="bell-btn" aria-label="Notifications" title="Notifications">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                    <span class="nav-badge-dot"></span>
+                </button>
+
+                <div class="nav-user-profile" title="View Student Profile">
+                    <img src="assets/images/avatar-sneha.jpg" alt="Student profile" class="nav-avatar-img">
+                    <div class="nav-user-info">
+                        <span class="nav-user-name">Hi, Student</span>
+                        <span class="nav-user-role">Learner</span>
+                    </div>
+                    <span class="nav-chevron">▼</span>
+                </div>
+
+                <button class="nav-toggle" id="nav-toggle" aria-label="Toggle Navigation Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-nav" id="mobile-nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="quizzes.html" class="nav-link active">Quizzes</a>
+        <a href="leaderboard.html" class="nav-link">Leaderboard</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+
+    <!-- Search Modal Overlay -->
+    <div class="search-modal-overlay" id="search-modal">
+        <div class="search-modal-box">
+            <div class="search-input-wrap">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--text-muted);">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input type="text" id="quick-search-input" placeholder="Search quizzes..." autofocus>
+                <button type="button" class="btn-close-search" id="close-search-btn">✕</button>
+            </div>
+            <div class="search-results-list" id="quick-search-results"></div>
+        </div>
+    </div>
+
+    <main class="result-section">
+        <div class="container">
+            
+            <div class="result-card-main result-card">
+                
+                <!-- SVG Gradient Definition for Score Ring -->
+                <svg width="0" height="0" style="position: absolute;">
+                    <defs>
+                        <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#E82B91" />
+                            <stop offset="100%" stop-color="#7B3FF2" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+
+                <div class="result-badge" id="result-status-badge">
+                    <span>🎉</span>
+                    <span>HTML • Set 01 Complete</span>
+                </div>
+
+                <h1 style="font-size: clamp(2rem, 4vw, 2.6rem); color: var(--navy-dark); margin-bottom: 0.5rem;" id="result-heading-title">
+                    Great Job, Student!
+                </h1>
+                
+                <p style="color: var(--text-muted); font-size: 1.05rem; margin-bottom: 2rem;" id="result-motivational-msg">
+                    You've successfully completed this quiz challenge.
+                </p>
+
+                <!-- Circular Score Gauge -->
+                <div class="score-circle-container">
+                    <svg class="score-svg" viewBox="0 0 200 200">
+                        <circle class="score-circle-bg" cx="100" cy="100" r="88" />
+                        <circle class="score-circle-bar" id="score-circle-progress" cx="100" cy="100" r="88" />
+                    </svg>
+                    <div class="score-text-inside">
+                        <span class="score-pct-val" id="score-percentage-val">0%</span>
+                        <span class="score-points-val" id="score-fraction-val">0 / 20 Points</span>
+                    </div>
+                </div>
+
+                <!-- 4 Key Statistics Cards -->
+                <div class="result-stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-num stat-correct" id="stat-correct-count">0</div>
+                        <div class="stat-lbl">Correct Answers</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-num stat-wrong" id="stat-wrong-count">0</div>
+                        <div class="stat-lbl">Incorrect Answers</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-num stat-skipped" id="stat-skipped-count">0</div>
+                        <div class="stat-lbl">Skipped / Missed</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-num stat-time" id="stat-time-taken">00:00</div>
+                        <div class="stat-lbl">Time Taken</div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="result-actions-row">
+                    <a href="#" class="btn btn-primary btn-lg" id="btn-review-solutions">
+                        <span>Review Solutions & Explanations →</span>
+                    </a>
+                    <a href="#" class="btn btn-secondary btn-lg" id="btn-retry-set">
+                        <span>🔄 Retry This Set</span>
+                    </a>
+                    <a href="#" class="btn btn-outline-pink btn-lg" id="btn-next-set">
+                        <span>Next Set →</span>
+                    </a>
+                    <a href="quizzes.html" class="btn btn-ghost btn-lg">
+                        <span>Back to Quizzes</span>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ==================== UNIVERSAL FOOTER ==================== -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand-col">
+                    <a href="index.html" class="logo">
+                        <div class="logo-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"/>
+                            </svg>
+                        </div>
+                        <div class="logo-info">
+                            <div class="logo-text">Quiz<span>Master</span></div>
+                            <span class="logo-tagline">Learn &bull; Practice &bull; Grow</span>
+                        </div>
+                    </a>
+                    <p class="footer-desc">
+                        QuizMaster is your learning companion to practice, improve, and achieve your goals with interactive quizzes and detailed step-by-step explanations.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="footer-col-title">Quick Links</h4>
+                    <ul class="footer-links-list">
+                        <li><a href="index.html" class="footer-link">Home</a></li>
+                        <li><a href="quizzes.html" class="footer-link">Quizzes</a></li>
+                        <li><a href="leaderboard.html" class="footer-link">Leaderboard</a></li>
+                        <li><a href="about.html" class="footer-link">About Us</a></li>
+                        <li><a href="contact.html" class="footer-link">Contact Support</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-col-title">Popular Tracks</h4>
+                    <ul class="footer-links-list">
+                        <li><a href="quizzes.html?category=HTML" class="footer-link">HTML Fundamentals</a></li>
+                        <li><a href="quizzes.html?category=CSS" class="footer-link">CSS Styling</a></li>
+                        <li><a href="quizzes.html?category=JavaScript" class="footer-link">JavaScript Master</a></li>
+                        <li><a href="quizzes.html?category=Computer%20Science" class="footer-link">Computer Science</a></li>
+                        <li><a href="quizzes.html?category=General%20Knowledge" class="footer-link">General Knowledge</a></li>
+                        <li><a href="quizzes.html?category=Aptitude" class="footer-link">Aptitude & Reasoning</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-col-title">Connect With Us</h4>
+                    <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                        Let's build a smarter tomorrow together.
+                    </p>
+                    <div class="footer-social-row">
+                        <a href="https://instagram.com" target="_blank" class="footer-social-icon" aria-label="Instagram">📸</a>
+                        <a href="https://youtube.com" target="_blank" class="footer-social-icon" aria-label="YouTube">▶️</a>
+                        <a href="https://twitter.com" target="_blank" class="footer-social-icon" aria-label="Twitter">🐦</a>
+                        <a href="https://linkedin.com" target="_blank" class="footer-social-icon" aria-label="LinkedIn">💼</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom-bar">
+                <div class="footer-copyright">&copy; 2026 QuizMaster. All rights reserved.</div>
+                <ul class="footer-legal-links">
+                    <li><a href="about.html">Privacy Policy</a></li>
+                    <li><a href="about.html">Terms of Service</a></li>
+                    <li><a href="contact.html">Help & FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/data/question-bank.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/result.js"></script>
+</body>
+</html>

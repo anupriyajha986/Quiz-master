@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="QuizMaster - Global Leaderboard & Hall of Fame. See top ranking student learners, scores, and track achievements."
+    />
+    <title>QuizMaster - Global Leaderboard & Rankings</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Main Stylesheet & Responsive -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23E82B91'><path d='M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z'/></svg>"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/quiz.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+  </head>
+  <body>
+    <!-- ==================== 1. UNIVERSAL NAVBAR ==================== -->
+    <header class="navbar" id="navbar">
+      <div class="container nav-container">
+        <a href="index.html" class="logo">
+          <div class="logo-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"
+              />
+            </svg>
+          </div>
+          <div class="logo-info">
+            <div class="logo-text">Quiz<span>Master</span></div>
+            <span class="logo-tagline">Learn &bull; Practice &bull; Grow</span>
+          </div>
+        </a>
+
+        <nav class="nav-menu">
+          <ul class="nav-links">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="quizzes.html" class="nav-link">Quizzes</a></li>
+            <li>
+              <a href="leaderboard.html" class="nav-link active">Leaderboard</a>
+            </li>
+            <li><a href="about.html" class="nav-link">About</a></li>
+            <li><a href="contact.html" class="nav-link">Contact</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-actions">
+          <button
+            type="button"
+            class="nav-icon-btn btn-search-trigger"
+            id="search-btn"
+            aria-label="Search quizzes"
+            title="Search Quizzes"
+          >
+            <svg
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            class="nav-icon-btn icon-bell-btn"
+            id="bell-btn"
+            aria-label="Notifications"
+            title="Notifications"
+          >
+            <svg
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+              />
+            </svg>
+            <span class="nav-badge-dot"></span>
+          </button>
+
+          <div class="nav-user-profile" title="View Student Profile">
+            <img
+              src="assets/images/avatar-sneha.jpg"
+              alt="Student profile"
+              class="nav-avatar-img"
+            />
+            <div class="nav-user-info">
+              <span class="nav-user-name">Hi, Student</span>
+              <span class="nav-user-role">Learner</span>
+            </div>
+            <span class="nav-chevron">▼</span>
+          </div>
+
+          <button
+            class="nav-toggle"
+            id="nav-toggle"
+            aria-label="Toggle Navigation Menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-nav" id="mobile-nav">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="quizzes.html" class="nav-link">Quizzes</a>
+      <a href="leaderboard.html" class="nav-link active">Leaderboard</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+
+    <!-- Search Modal Overlay -->
+    <div class="search-modal-overlay" id="search-modal">
+      <div class="search-modal-box">
+        <div class="search-input-wrap">
+          <svg
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            style="color: var(--text-muted)"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+          <input
+            type="text"
+            id="quick-search-input"
+            placeholder="Search quizzes..."
+            autofocus
+          />
+          <button type="button" class="btn-close-search" id="close-search-btn">
+            ✕
+          </button>
+        </div>
+        <div class="search-results-list" id="quick-search-results"></div>
+      </div>
+    </div>
+
+    <main style="padding: 3.5rem 0 5rem 0">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">🏆 Hall of Fame</span>
+          <h1 class="section-title">QuizMaster Leaderboard</h1>
+          <p class="section-subtitle">
+            Top learners dominating technical challenges and mastering speed and
+            accuracy.
+          </p>
+        </div>
+
+        <!-- Top 3 Podium Cards -->
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3.5rem;
+            align-items: end;
+          "
+          class="stats-grid"
+        >
+          <!-- Rank 2: Silver -->
+          <div
+            class="card"
+            style="
+              text-align: center;
+              border-color: var(--border-purple);
+              background: linear-gradient(180deg, #ffffff 0%, #faf7ff 100%);
+              padding: 2rem 1.5rem;
+            "
+          >
+            <div style="font-size: 2.2rem; margin-bottom: 0.5rem">🥈</div>
+            <img
+              src="assets/images/avatar-rahul.jpg"
+              alt="Rahul Sharma"
+              style="
+                width: 64px;
+                height: 64px;
+                border-radius: 50%;
+                margin: 0 auto 0.75rem auto;
+                border: 3px solid #94a3b8;
+                object-fit: cover;
+              "
+            />
+            <h3
+              style="
+                font-size: 1.15rem;
+                color: var(--navy-dark);
+                margin-bottom: 0.2rem;
+              "
+            >
+              Rahul Sharma
+            </h3>
+            <span class="badge badge-purple" style="margin-bottom: 1rem"
+              >JavaScript & CS Expert</span
+            >
+            <div
+              style="
+                font-size: 1.5rem;
+                font-weight: 800;
+                color: var(--primary-purple);
+                font-family: var(--font-heading);
+              "
+            >
+              780 pts
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted)">
+              Accuracy: 97.5%
+            </div>
+          </div>
+
+          <!-- Rank 1: Gold -->
+          <div
+            class="card"
+            style="
+              text-align: center;
+              border: 2px solid var(--primary-pink);
+              background: linear-gradient(180deg, #fff0f8 0%, #ffffff 100%);
+              padding: 2.5rem 1.5rem;
+              transform: translateY(-10px);
+              box-shadow: var(--shadow-pink);
+            "
+          >
+            <div style="font-size: 2.8rem; margin-bottom: 0.5rem">👑</div>
+            <img
+              src="assets/images/avatar-sneha.jpg"
+              alt="Sneha Patel"
+              style="
+                width: 76px;
+                height: 76px;
+                border-radius: 50%;
+                margin: 0 auto 0.75rem auto;
+                border: 3px solid #f59e0b;
+                object-fit: cover;
+              "
+            />
+            <h3
+              style="
+                font-size: 1.3rem;
+                color: var(--navy-dark);
+                margin-bottom: 0.2rem;
+              "
+            >
+              Anupriya Jha
+            </h3>
+            <span class="badge badge-pink" style="margin-bottom: 1rem"
+              >All-Track Champion</span
+            >
+            <div
+              style="
+                font-size: 1.8rem;
+                font-weight: 900;
+                color: var(--primary-pink);
+                font-family: var(--font-heading);
+              "
+            >
+              795 pts
+            </div>
+            <div style="font-size: 0.82rem; color: var(--text-muted)">
+              Accuracy: 99.4% &bull; 40 Sets
+            </div>
+          </div>
+
+          <!-- Rank 3: Bronze -->
+          <div
+            class="card"
+            style="
+              text-align: center;
+              border-color: var(--border-pink);
+              background: linear-gradient(180deg, #ffffff 0%, #fff7fc 100%);
+              padding: 2rem 1.5rem;
+            "
+          >
+            <div style="font-size: 2.2rem; margin-bottom: 0.5rem">🥉</div>
+            <img
+              src="assets/images/avatar-priya.jpg"
+              alt="Priya Nair"
+              style="
+                width: 64px;
+                height: 64px;
+                border-radius: 50%;
+                margin: 0 auto 0.75rem auto;
+                border: 3px solid #b45309;
+                object-fit: cover;
+              "
+            />
+            <h3
+              style="
+                font-size: 1.15rem;
+                color: var(--navy-dark);
+                margin-bottom: 0.2rem;
+              "
+            >
+              Priya Nair
+            </h3>
+            <span class="badge badge-easy" style="margin-bottom: 1rem"
+              >HTML & CSS Pro</span
+            >
+            <div
+              style="
+                font-size: 1.5rem;
+                font-weight: 800;
+                color: var(--success);
+                font-family: var(--font-heading);
+              "
+            >
+              760 pts
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted)">
+              Accuracy: 95.0%
+            </div>
+          </div>
+        </div>
+
+        <!-- Rankings Table Card -->
+        <div
+          style="
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow-sm);
+            overflow-x: auto;
+          "
+        >
+          <table
+            style="width: 100%; border-collapse: collapse; text-align: left"
+          >
+            <thead>
+              <tr
+                style="
+                  border-bottom: 2px solid var(--border);
+                  color: var(--navy-dark);
+                  font-size: 0.88rem;
+                  text-transform: uppercase;
+                  letter-spacing: 0.04em;
+                "
+              >
+                <th style="padding: 1rem 0.5rem">Rank</th>
+                <th style="padding: 1rem">Learner</th>
+                <th style="padding: 1rem">Primary Track</th>
+                <th style="padding: 1rem">Completed Sets</th>
+                <th style="padding: 1rem">Accuracy</th>
+                <th style="padding: 1rem; text-align: right">Total Score</th>
+              </tr>
+            </thead>
+            <tbody style="font-size: 0.95rem; color: var(--text-secondary)">
+              <tr
+                style="
+                  border-bottom: 1px solid var(--border-light);
+                  background: var(--primary-pink-soft);
+                "
+              >
+                <td
+                  style="
+                    padding: 1rem 0.5rem;
+                    font-weight: 700;
+                    color: var(--primary-pink);
+                  "
+                >
+                  #1
+                </td>
+                <td
+                  style="
+                    padding: 1rem;
+                    font-weight: 700;
+                    color: var(--navy-dark);
+                    display: flex;
+                    align-items: center;
+                    gap: 0.6rem;
+                  "
+                >
+                  <img
+                    src="assets/images/avatar-sneha.jpg"
+                    style="
+                      width: 32px;
+                      height: 32px;
+                      border-radius: 50%;
+                      object-fit: cover;
+                    "
+                  />
+                  Anupriya Jha (You)
+                </td>
+                <td style="padding: 1rem">
+                  <span class="badge badge-pink">All-Rounder</span>
+                </td>
+                <td style="padding: 1rem">40 / 40</td>
+                <td
+                  style="padding: 1rem; font-weight: 600; color: var(--success)"
+                >
+                  99.4%
+                </td>
+                <td
+                  style="
+                    padding: 1rem;
+                    text-align: right;
+                    font-weight: 800;
+                    color: var(--primary-pink);
+                    font-family: var(--font-heading);
+                  "
+                >
+                  795 pts
+                </td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border-light)">
+                <td
+                  style="
+                    padding: 1rem 0.5rem;
+                    font-weight: 700;
+                    color: var(--text-muted);
+                  "
+                >
+                  #2
+                </td>
+                <td
+                  style="
+                    padding: 1rem;
+                    font-weight: 600;
+                    color: var(--navy-dark);
+                    display: flex;
+                    align-items: center;
+                    gap: 0.6rem;
+                  "
+                >
+                  <img
+                    src="assets/images/avatar-rahul.jpg"
+                    style="
+                      width: 32px;
+                      height: 32px;
+                      border-radius: 50%;
+                      object-fit: cover;
+                    "
+                  />
+                  Rahul Sharma
+                </td>
+                <td style="padding: 1rem">
+                  <span class="badge badge-purple">JavaScript</span>
+                </td>
+                <td style="padding: 1rem">39 / 40</td>
+                <td
+                  style="padding: 1rem; font-weight: 600; color: var(--success)"
+                >
+                  97.5%
+                </td>
+                <td
+                  style="
+                    padding: 1rem;
+                    text-align: right;
+                    font-weight: 800;
+                    color: var(--navy-dark);
+                    font-family: var(--font-heading);
+                  "
+                >
+                  780 pts
+                </td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border-light)">
+                <td
+                  style="
+                    padding: 1rem 0.5rem;
+                    font-weight: 700;
+                    color: var(--text-muted);
+                  "
+                >
+                  #3
+                </td>
+                <td
+                  style="
+                    padding: 1rem;
+                    font-weight: 600;
+                    color: var(--navy-dark);
+                    display: flex;
+                    align-items: center;
+                    gap: 0.6rem;
+                  "
+                >
+                  <img
+                    src="assets/images/avatar-priya.jpg"
+                    style="
+                      width: 32px;
+                      height: 32px;
+                      border-radius: 50%;
+                      object-fit: cover;
+                    "
+                  />
+                  Priya Nair
+                </td>
+                <td style="padding: 1rem">
+                  <span class="badge badge-easy">HTML / CSS</span>
+                </td>
+                <td style="padding: 1rem">38 / 40</td>
+                <td
+                  style="padding: 1rem; font-weight: 600; color: var(--success)"
+                >
+                  95.0%
+                </td>
+                <td
+                  style="
+                    padding: 1rem;
+                    text-align: right;
+                    font-weight: 800;
+                    color: var(--navy-dark);
+                    font-family: var(--font-heading);
+                  "
+                >
+                  760 pts
+                </td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border-light)">
+                <td
+                  style="
+                    padding: 1rem 0.5rem;
+                    font-weight: 700;
+                    color: var(--text-muted);
+                  "
+                >
+                  #4
+                </td>
+                <td
+                  style="
+                    padding: 1rem;
+                    font-weight: 600;
+                    color: var(--navy-dark);
+                  "
+                >
+                  Amit Verma
+                </td>
+                <td style="padding: 1rem">
+                  <span class="badge badge-purple">Computer Science</span>
+                </td>
+                <td style="padding: 1rem">36 / 40</td>
+                <td
+                  style="padding: 1rem; font-weight: 600; color: var(--success)"
+                >
+                  92.1%
+                </td>
+                <td
+                  style="
+                    padding: 1rem;
+                    text-align: right;
+                    font-weight: 800;
+                    color: var(--navy-dark);
+                    font-family: var(--font-heading);
+                  "
+                >
+                  720 pts
+                </td>
+              </tr>
+              <tr>
+                <td
+                  style="
+                    padding: 1rem 0.5rem;
+                    font-weight: 700;
+                    color: var(--text-muted);
+                  "
+                >
+                  #5
+                </td>
+                <td
+                  style="
+                    padding: 1rem;
+                    font-weight: 600;
+                    color: var(--navy-dark);
+                  "
+                >
+                  Ananya Das
+                </td>
+                <td style="padding: 1rem">
+                  <span class="badge badge-amber">Aptitude</span>
+                </td>
+                <td style="padding: 1rem">35 / 40</td>
+                <td
+                  style="padding: 1rem; font-weight: 600; color: var(--success)"
+                >
+                  91.0%
+                </td>
+                <td
+                  style="
+                    padding: 1rem;
+                    text-align: right;
+                    font-weight: 800;
+                    color: var(--navy-dark);
+                    font-family: var(--font-heading);
+                  "
+                >
+                  700 pts
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <!-- ==================== UNIVERSAL FOOTER ==================== -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand-col">
+            <a href="index.html" class="logo">
+              <div class="logo-icon">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"
+                  />
+                </svg>
+              </div>
+              <div class="logo-info">
+                <div class="logo-text">Quiz<span>Master</span></div>
+                <span class="logo-tagline"
+                  >Learn &bull; Practice &bull; Grow</span
+                >
+              </div>
+            </a>
+            <p class="footer-desc">
+              QuizMaster is your learning companion to practice, improve, and
+              achieve your goals with interactive quizzes and detailed
+              step-by-step explanations.
+            </p>
+          </div>
+
+          <div>
+            <h4 class="footer-col-title">Quick Links</h4>
+            <ul class="footer-links-list">
+              <li><a href="index.html" class="footer-link">Home</a></li>
+              <li><a href="quizzes.html" class="footer-link">Quizzes</a></li>
+              <li>
+                <a href="leaderboard.html" class="footer-link">Leaderboard</a>
+              </li>
+              <li><a href="about.html" class="footer-link">About Us</a></li>
+              <li>
+                <a href="contact.html" class="footer-link">Contact Support</a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="footer-col-title">Popular Tracks</h4>
+            <ul class="footer-links-list">
+              <li>
+                <a href="quizzes.html?category=HTML" class="footer-link"
+                  >HTML Fundamentals</a
+                >
+              </li>
+              <li>
+                <a href="quizzes.html?category=CSS" class="footer-link"
+                  >CSS Styling</a
+                >
+              </li>
+              <li>
+                <a href="quizzes.html?category=JavaScript" class="footer-link"
+                  >JavaScript Master</a
+                >
+              </li>
+              <li>
+                <a
+                  href="quizzes.html?category=Computer%20Science"
+                  class="footer-link"
+                  >Computer Science</a
+                >
+              </li>
+              <li>
+                <a
+                  href="quizzes.html?category=General%20Knowledge"
+                  class="footer-link"
+                  >General Knowledge</a
+                >
+              </li>
+              <li>
+                <a href="quizzes.html?category=Aptitude" class="footer-link"
+                  >Aptitude & Reasoning</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="footer-col-title">Connect With Us</h4>
+            <p
+              style="
+                font-size: 0.88rem;
+                color: var(--text-muted);
+                margin-bottom: 0.75rem;
+              "
+            >
+              Let's build a smarter tomorrow together.
+            </p>
+            <div class="footer-social-row">
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                class="footer-social-icon"
+                aria-label="Instagram"
+                >📸</a
+              >
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                class="footer-social-icon"
+                aria-label="YouTube"
+                >▶️</a
+              >
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                class="footer-social-icon"
+                aria-label="Twitter"
+                >🐦</a
+              >
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                class="footer-social-icon"
+                aria-label="LinkedIn"
+                >💼</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom-bar">
+          <div class="footer-copyright">
+            &copy; 2026 QuizMaster. All rights reserved.
+          </div>
+          <ul class="footer-legal-links">
+            <li><a href="about.html">Privacy Policy</a></li>
+            <li><a href="about.html">Terms of Service</a></li>
+            <li><a href="contact.html">Help & FAQ</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/data/question-bank.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 160" width="100%" height="100%">
+  <defs>
+    <linearGradient id="apt-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6"/>
+      <stop offset="50%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#EC4899"/>
+    </linearGradient>
+    <linearGradient id="apt-chart" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#A855F7"/>
+      <stop offset="100%" stop-color="#F43F5E"/>
+    </linearGradient>
+    <linearGradient id="apt-glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.04"/>
+    </linearGradient>
+    <filter id="apt-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#4C1D95" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="400" height="160" rx="16" fill="url(#apt-bg)"/>
+  
+  <!-- Geometric Analytics Math grid & target rings -->
+  <circle cx="365" cy="25" r="75" fill="url(#apt-glow)"/>
+  <circle cx="35" cy="135" r="55" fill="url(#apt-glow)"/>
+  <path d="M-10 110 L60 60 L120 90 L200 30 L280 80 L360 20 L410 50" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
+  
+  <!-- Aptitude Math Formula Pills in Background -->
+  <rect x="24" y="24" width="84" height="24" rx="6" fill="rgba(255,255,255,0.18)"/>
+  <text x="32" y="40" font-family="'Fira Code', monospace" font-size="11" font-weight="600" fill="#EDE9FE">S.I. = PTR/100</text>
+
+  <rect x="24" y="112" width="80" height="22" rx="6" fill="rgba(255,255,255,0.18)"/>
+  <text x="32" y="127" font-family="'Fira Code', monospace" font-size="11" font-weight="600" fill="#EDE9FE">Speed = D / T</text>
+
+  <!-- Floating Analytics & Logic Puzzle Card -->
+  <g transform="translate(130, 20)" filter="url(#apt-shadow)">
+    <rect width="140" height="118" rx="10" fill="#FFFFFF" fill-opacity="0.95"/>
+    <rect width="140" height="22" rx="10" fill="#FAF5FF"/>
+    <rect y="12" width="140" height="10" fill="#FAF5FF"/>
+    <circle cx="12" cy="11" r="3.5" fill="#8B5CF6"/>
+    <circle cx="22" cy="11" r="3.5" fill="#EC4899"/>
+    <circle cx="32" cy="11" r="3.5" fill="#F59E0B"/>
+    
+    <!-- Bar Chart Analytics Graphic -->
+    <rect x="22" y="58" width="14" height="20" rx="3" fill="#DDD6FE"/>
+    <rect x="42" y="46" width="14" height="32" rx="3" fill="#C084FC"/>
+    <rect x="62" y="36" width="14" height="42" rx="3" fill="#A855F7"/>
+    <rect x="82" y="48" width="14" height="30" rx="3" fill="#E879F9"/>
+    <rect x="102" y="32" width="14" height="46" rx="3" fill="url(#apt-chart)"/>
+    <!-- Growth Arrow Line -->
+    <polyline points="28,54 48,42 68,32 88,44 108,28" fill="none" stroke="#EC4899" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="108" cy="28" r="3" fill="#F43F5E"/>
+
+    <rect x="12" y="86" width="116" height="20" rx="4" fill="#F5F3FF"/>
+    <text x="18" y="100" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="700" fill="#6D28D9">Quantitative &bull; Series &bull; Logic</text>
+  </g>
+
+  <!-- 3D Brain / Target Graph Emblem -->
+  <g transform="translate(295, 25)" filter="url(#apt-shadow)">
+    <circle cx="45" cy="45" r="42" fill="#FFFFFF" fill-opacity="0.2"/>
+    <circle cx="45" cy="45" r="34" fill="#FFFFFF"/>
+    <!-- Brain / Logic Analytics Icon -->
+    <circle cx="45" cy="45" r="28" fill="#7C3AED" fill-opacity="0.1"/>
+    <!-- Target / Gear / Math Graphic -->
+    <circle cx="45" cy="45" r="20" fill="none" stroke="#7C3AED" stroke-width="2.5" stroke-dasharray="6 3"/>
+    <circle cx="45" cy="45" r="10" fill="#EC4899"/>
+    <circle cx="45" cy="45" r="4" fill="#FFFFFF"/>
+    <!-- Sparkle Badge -->
+    <circle cx="68" cy="22" r="11" fill="#FBBF24"/>
+    <text x="63.5" y="27" font-family="sans-serif" font-size="14" fill="#78350F">📊</text>
+  </g>
+</svg>
