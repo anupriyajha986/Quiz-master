@@ -273,31 +273,39 @@ export default function AvailableExams() {
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-[#E2E8F0] flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[11px] text-[#64748B]">
-                      Attempts: <strong className="text-[#111827]">{submittedCount}</strong>/{limit}
-                    </span>
-                  </div>
+                  <div className="pt-4 border-t border-[#E2E8F0] flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[11px] text-[#64748B]">
+                        Attempts: <strong className="text-[#111827]">{submittedCount}</strong>/{limit}
+                      </span>
+                    </div>
 
-                  {inProgress ? (
-                    <Link to={`/student/attempts/${inProgress.id}`}>
-                      <Button size="sm" variant="success" icon={Play}>
-                        Resume Test
-                      </Button>
-                    </Link>
-                  ) : canAttempt ? (
-                    <Link to={`/student/exams/${test.id}/instructions`}>
-                      <Button size="sm" icon={submittedCount > 0 ? RotateCcw : Play}>
-                        {submittedCount > 0 ? "Retake Set" : "Start Set"}
-                      </Button>
-                    </Link>
-                  ) : (
-                    <Badge variant="default" size="xs">
-                      Attempts Exhausted
-                    </Badge>
-                  )}
-                </div>
+                    {inProgress ? (
+                      <Link to={`/student/attempts/${inProgress.id}`}>
+                        <Button size="sm" variant="success" icon={Play}>
+                          Resume Test
+                        </Button>
+                      </Link>
+                    ) : isUpcoming ? (
+                      <Badge variant="primary" size="xs">
+                        Scheduled {test.startAt ? new Date(test.startAt).toLocaleDateString() : ""}
+                      </Badge>
+                    ) : isExpired ? (
+                      <Badge variant="default" size="xs">
+                        Window Closed
+                      </Badge>
+                    ) : canAttempt ? (
+                      <Link to={`/student/exams/${test.id}/instructions`}>
+                        <Button size="sm" icon={submittedCount > 0 ? RotateCcw : Play}>
+                          {submittedCount > 0 ? "Retake Set" : "Start Set"}
+                        </Button>
+                      </Link>
+                    ) : (
+                      <Badge variant="default" size="xs">
+                        Attempts Exhausted
+                      </Badge>
+                    )}
+                  </div>
               </Card>
             );
           })}

@@ -75,9 +75,10 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const isSuperAdmin = userProfile?.role === "super_admin";
-  const isAdmin = userProfile?.role === "admin" || isSuperAdmin;
-  const isStudent = userProfile?.role === "student";
+  const rawRole = (userProfile?.role || "").trim().toLowerCase();
+  const isSuperAdmin = rawRole === "super_admin";
+  const isAdmin = ["admin", "super_admin", "manager", "evaluator"].includes(rawRole);
+  const isStudent = rawRole === "student";
   const isActive = userProfile?.accountStatus !== "inactive";
 
   const hasPermission = (permissionId) => {
@@ -91,6 +92,7 @@ export function AuthProvider({ children }) {
   const value = {
     currentUser,
     userProfile,
+    role: rawRole,
     isAdmin,
     isSuperAdmin,
     isStudent,

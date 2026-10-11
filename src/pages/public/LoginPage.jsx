@@ -15,12 +15,33 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const { login } = useAuth();
+  const { currentUser, userProfile, isAdmin, login, loading: authLoading } = useAuth();
   const toast = useToast();
   const navigate = useNavigate();
   const location = useLocation();
 
   const from = location.state?.from?.pathname || null;
+
+  // Auto-redirect if already authenticated and role is known
+  React.useEffect(() => {
+    if (!authLoading && currentUser && userProfile) {
+      const userRole = (userProfile?.role || "").trim().toLowerCase();
+      const isAdminRole = ["admin", "super_admin", "manager", "evaluator"].includes(userRole);
+      if (isAdminRole) {
+        if (from && from.startsWith("/admin")) {
+          navigate(from, { replace: true });
+        } else {
+          navigate("/admin/dashboard", { replace: true });
+        }
+      } else if (userRole === "student") {
+        if (from && from.startsWith("/student") && !from.startsWith("/student/dashboard")) {
+          navigate(from, { replace: true });
+        } else {
+          navigate("/student/dashboard", { replace: true });
+        }
+      }
+    }
+  }, [currentUser, userProfile, isAdmin, authLoading, navigate, from]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,23 +55,39 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const res = await login(email, password);
+      const userRole = (res.profile?.role || "").trim().toLowerCase();
+      const isAdminRole = ["admin", "super_admin", "manager", "evaluator"].includes(userRole);
+      const isStudentRole = userRole === "student";
+
       toast.success(`Welcome back, ${res.profile?.fullName || "User"}!`);
-      if (from) {
-        navigate(from, { replace: true });
-      } else if (res.profile?.role === "admin") {
-        navigate("/admin/dashboard", { replace: true });
+
+      if (isAdminRole) {
+        if (from && from.startsWith("/admin")) {
+          navigate(from, { replace: true });
+        } else {
+          navigate("/admin/dashboard", { replace: true });
+        }
+      } else if (isStudentRole) {
+        if (from && from.startsWith("/student") && !from.startsWith("/student/dashboard")) {
+          navigate(from, { replace: true });
+        } else {
+          navigate("/student/dashboard", { replace: true });
+        }
       } else {
-        navigate("/student/dashboard", { replace: true });
+        // Unrecognized role
+        console.warn("Unrecognized user role:", userRole);
+        toast.error("Account role is unassigned or unauthorized. Please contact administrator.");
+        navigate("/", { replace: true });
       }
     } catch (err) {
       console.error("Login failed:", err);
       let msg = "Invalid email or password.";
-      if (err.message.includes("user-not-found")) msg = "No user found with this email.";
-      if (err.message.includes("wrong-password") || err.message.includes("invalid-credential")) {
+      if (err.message?.includes("user-not-found")) msg = "No user found with this email.";
+      if (err.message?.includes("wrong-password") || err.message?.includes("invalid-credential")) {
         msg = "Incorrect credentials. Please verify your password.";
       }
-      if (err.message.includes("deactivated")) {
-        msg = "This account has been deactivated by an administrator.";
+      if (err.message?.includes("deactivated") || err.message?.includes("inactive")) {
+        msg = "This account has been deactivated or is inactive. Please contact an administrator.";
       }
       setError(msg);
       toast.error(msg);

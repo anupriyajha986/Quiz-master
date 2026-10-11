@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { ProtectedRoute, AdminRoute, PermissionRoute } from "./ProtectedRoute";
+import { ProtectedRoute, AdminRoute, PermissionRoute, StudentRoute } from "./ProtectedRoute";
 
 // Route Loading Spinner
 function PageLoader() {
@@ -71,17 +71,17 @@ export default function AppRoutes() {
       <Route
         path="/student/attempts/:attemptId"
         element={
-          <ProtectedRoute>
+          <StudentRoute>
             <ExamLivePage />
-          </ProtectedRoute>
+          </StudentRoute>
         }
       />
       <Route
         path="/student/exams/:examId/attempt/:attemptId"
         element={
-          <ProtectedRoute>
+          <StudentRoute>
             <ExamLivePage />
-          </ProtectedRoute>
+          </StudentRoute>
         }
       />
 
@@ -89,9 +89,9 @@ export default function AppRoutes() {
       <Route
         path="/student"
         element={
-          <ProtectedRoute>
+          <StudentRoute>
             <StudentLayout />
-          </ProtectedRoute>
+          </StudentRoute>
         }
       >
         <Route index element={<Navigate to="/student/dashboard" replace />} />
@@ -156,6 +156,14 @@ export default function AppRoutes() {
         />
         <Route
           path="tests/create"
+          element={
+            <PermissionRoute permission="exams.create">
+              <TestCreateWizard />
+            </PermissionRoute>
+          }
+        />
+        <Route
+          path="tests/:testId/edit"
           element={
             <PermissionRoute permission="exams.create">
               <TestCreateWizard />

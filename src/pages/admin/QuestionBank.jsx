@@ -712,6 +712,9 @@ export default function QuestionBank() {
         const parsed = JSON.parse(trimmed);
         if (Array.isArray(parsed)) {
           rawList = parsed;
+        } else if (Array.isArray(parsed.questions)) {
+          // Direct Question Bank object format (e.g. quizmaster_technical_placement_50_questions.json)
+          rawList = parsed.questions;
         } else {
           // Flatten subject/set object structure
           Object.keys(parsed).forEach((cat) => {
@@ -766,14 +769,28 @@ export default function QuestionBank() {
         }
 
         let ans = q.correctAnswer;
-        if (ans === undefined && q.answer !== undefined) {
-          const idxNum = Number(q.answer);
+        if (ans === undefined && q.correctOptionId !== undefined) {
+          ans = q.correctOptionId;
+        } else if (ans === undefined && q.correctOptionIndex !== undefined) {
+          const idxNum = Number(q.correctOptionIndex);
           if (idxNum >= 0 && idxNum < opts.length) {
             ans = String.fromCharCode(65 + idxNum);
+          } else {
+            rowErrors.push(`Correct option index (${q.correctOptionIndex}) out of options range`);
+          }
+        } else if (ans === undefined && q.answer !== undefined) {
+          const idxNum = Number(q.answer);
+          if (!isNaN(idxNum) && idxNum >= 0 && idxNum < opts.length) {
+            ans = String.fromCharCode(65 + idxNum);
+          } else if (typeof q.answer === "string") {
+            ans = q.answer;
           } else {
             rowErrors.push(`Answer index (${q.answer}) out of options range`);
           }
         }
+
+        const posMarks = Number(q.positiveMarks) || Number(q.marksCorrect) || 4;
+        const negMarks = Number(q.negativeMarks) !== undefined ? Math.abs(Number(q.negativeMarks)) : (Number(q.marksIncorrect) !== undefined ? Math.abs(Number(q.marksIncorrect)) : 1);
 
         const validItem = {
           rawIndex: idx + 1,
@@ -783,11 +800,14 @@ export default function QuestionBank() {
           setNumber: q.set || q.setNumber || 1,
           difficulty: q.difficulty || "Easy",
           options: opts.map((opt, oIdx) => ({
-            id: String.fromCharCode(65 + oIdx),
-            text: typeof opt === "string" ? opt : opt.text || ""
+            id: opt?.id || String.fromCharCode(65 + oIdx),
+            text: typeof opt === "string" ? opt : (opt?.text || "")
           })),
           correctAnswer: ans || "A",
           explanation: q.explanation || "",
+          positiveMarks: posMarks,
+          negativeMarks: negMarks,
+          status: q.status || "active",
           errors: rowErrors,
           isValid: rowErrors.length === 0
         };

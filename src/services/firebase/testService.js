@@ -113,24 +113,80 @@ export async function deleteTest(id) {
 }
 
 /**
- * Publishes test: generates sanitized questions snapshot and private answer key
+ * Validates whether a test meets all criteria required for official publication
+ */
+export function validateTestForPublishing(test, rawQuestions = []) {
+  const errors = [];
+
+  if (!test.title || test.title.trim().length < 3) {
+    errors.push("Examination title must be at least 3 characters long.");
+  }
+  if (!test.subject || test.subject.trim().length === 0) {
+    errors.push("Examination subject/category is required.");
+  }
+  if (!test.instructions || test.instructions.trim().length === 0) {
+    errors.push("Examination instructions are required.");
+  }
+  if (!test.durationMinutes || Number(test.durationMinutes) <= 0) {
+    errors.push("Duration must be a positive number of minutes.");
+  }
+  if (!test.questionIds || test.questionIds.length === 0) {
+    errors.push("At least one question must be selected for the examination.");
+  }
+
+  if (rawQuestions && rawQuestions.length > 0) {
+    rawQuestions.forEach((q, idx) => {
+      const qNum = idx + 1;
+      if (!q.questionText || q.questionText.trim().length === 0) {
+        errors.push(`Question #${qNum} has empty question text.`);
+      }
+      const type = q.questionType || "single_choice";
+      if (type === "single_choice" || type === "multiple_choice") {
+        if (!Array.isArray(q.options) || q.options.length < 2) {
+          errors.push(`Question #${qNum} must have at least 2 options.`);
+        }
+        if (q.correctAnswer === undefined || q.correctAnswer === null || q.correctAnswer === "") {
+          errors.push(`Question #${qNum} is missing a defined correct answer.`);
+        }
+      }
+    });
+  }
+
+  if (test.startAt && test.endAt) {
+    const s = new Date(test.startAt).getTime();
+    const e = new Date(test.endAt).getTime();
+    if (s > e) {
+      errors.push("End date and time must be after the start date and time.");
+    }
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+}
+
+/**
+ * Publishes test: validates integrity, generates sanitized questions snapshot, and stores private answer key
  */
 export async function publishTest(testId) {
   const user = auth.currentUser;
   const test = await getTestById(testId);
-  if (!test) throw new Error("Test not found");
+  if (!test) throw new Error("Examination not found.");
 
   const questionIds = test.questionIds || [];
   if (questionIds.length === 0) {
-    throw new Error("Cannot publish a test with no questions assigned.");
+    throw new Error("Cannot publish an examination with no questions assigned.");
   }
 
+  const rawQuestions = [];
   const sanitizedQuestions = [];
   const secureAnswers = {};
 
   for (const qid of questionIds) {
     const q = await getQuestionById(qid);
     if (q) {
+      rawQuestions.push(q);
       sanitizedQuestions.push({
         id: q.id,
         questionText: q.questionText,
@@ -152,6 +208,12 @@ export async function publishTest(testId) {
     }
   }
 
+  // Enforce mandatory publication validation
+  const validation = validateTestForPublishing(test, rawQuestions);
+  if (!validation.isValid) {
+    throw new Error(`Publication Validation Failed:\n• ${validation.errors.join("\n• ")}`);
+  }
+
   const totalMaxMarks = sanitizedQuestions.reduce(
     (acc, curr) => acc + (curr.positiveMarks || 4),
     0
@@ -163,9 +225,11 @@ export async function publishTest(testId) {
   const testRef = doc(db, TESTS_COL, testId);
   batch.update(testRef, {
     publicationStatus: "published",
+    status: "active",
     publishedQuestionsSnapshot: sanitizedQuestions,
     questionCount: sanitizedQuestions.length,
     maximumMarks: totalMaxMarks,
+    publishedAt: serverTimestamp(),
     updatedAt: serverTimestamp()
   });
 
@@ -183,7 +247,7 @@ export async function publishTest(testId) {
     action: "PUBLISH_TEST",
     actorUid: user?.uid || "admin",
     actorEmail: user?.email || "admin",
-    details: { testId, title: test.title, questionCount: sanitizedQuestions.length },
+    details: { testId, title: test.title, questionCount: sanitizedQuestions.length, maximumMarks: totalMaxMarks },
     timestamp: serverTimestamp()
   });
 
@@ -205,18 +269,103 @@ export async function publishTest(testId) {
 }
 
 /**
- * Fetch tests available for students
+ * Withdraws a published test back to Draft status
+ */
+export async function unpublishTest(testId) {
+  const user = auth.currentUser;
+  const test = await getTestById(testId);
+  if (!test) throw new Error("Examination not found.");
+
+  const testRef = doc(db, TESTS_COL, testId);
+  const batch = writeBatch(db);
+
+  batch.update(testRef, {
+    publicationStatus: "draft",
+    status: "draft",
+    updatedAt: serverTimestamp()
+  });
+
+  const auditRef = doc(collection(db, "auditLogs"));
+  batch.set(auditRef, {
+    action: "UNPUBLISH_TEST",
+    actorUid: user?.uid || "admin",
+    actorEmail: user?.email || "admin",
+    details: { testId, title: test.title, previousStatus: test.publicationStatus },
+    timestamp: serverTimestamp()
+  });
+
+  await batch.commit();
+  return { id: testId, publicationStatus: "draft" };
+}
+
+/**
+ * Archives an examination
+ */
+export async function archiveTest(testId) {
+  const user = auth.currentUser;
+  const test = await getTestById(testId);
+  if (!test) throw new Error("Examination not found.");
+
+  const testRef = doc(db, TESTS_COL, testId);
+  const batch = writeBatch(db);
+
+  batch.update(testRef, {
+    publicationStatus: "archived",
+    status: "archived",
+    updatedAt: serverTimestamp()
+  });
+
+  const auditRef = doc(collection(db, "auditLogs"));
+  batch.set(auditRef, {
+    action: "ARCHIVE_TEST",
+    actorUid: user?.uid || "admin",
+    actorEmail: user?.email || "admin",
+    details: { testId, title: test.title, previousStatus: test.publicationStatus },
+    timestamp: serverTimestamp()
+  });
+
+  await batch.commit();
+  return { id: testId, publicationStatus: "archived", status: "archived" };
+}
+
+/**
+ * Fetch tests available for students.
+ * Strictly filters out drafts, archived, disabled, and tests outside their availability window.
  */
 export async function getStudentAvailableTests() {
   const q = query(
     collection(db, TESTS_COL),
-    where("publicationStatus", "in", ["published", "scheduled"])
+    where("publicationStatus", "==", "published")
   );
   const snapshot = await getDocs(q);
-  const list = snapshot.docs.map((docSnap) => ({
-    id: docSnap.id,
-    ...docSnap.data()
-  }));
+  const now = new Date().getTime();
+
+  const list = snapshot.docs
+    .map((docSnap) => ({
+      id: docSnap.id,
+      ...docSnap.data()
+    }))
+    .filter((test) => {
+      // Exclude archived or disabled
+      if (test.status === "archived" || test.status === "disabled") return false;
+      if (test.publicationStatus !== "published") return false;
+
+      // Check availability window if defined
+      if (test.startAt) {
+        const startTime = new Date(test.startAt).getTime();
+        if (now < startTime) {
+          // Future scheduled exam - can be displayed as upcoming if needed, but not startable
+          test.isUpcoming = true;
+        }
+      }
+      if (test.endAt) {
+        const endTime = new Date(test.endAt).getTime();
+        if (now > endTime) {
+          test.isExpiredWindow = true;
+        }
+      }
+      return true;
+    });
 
   list.sort((a, b) => {
     const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : new Date(a.createdAt || 0).getTime();

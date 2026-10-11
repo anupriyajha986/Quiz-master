@@ -84,6 +84,23 @@ export async function startAttempt(testId, studentProfile, preloadedTest = null)
   if (test.publicationStatus !== "published") {
     throw new Error("This examination is not currently active.");
   }
+  if (test.status === "archived" || test.status === "disabled") {
+    throw new Error("This examination has been archived or disabled.");
+  }
+
+  const now = new Date();
+  if (test.startAt) {
+    const startDate = new Date(test.startAt);
+    if (now < startDate) {
+      throw new Error(`This examination has not started yet. Scheduled to open at ${startDate.toLocaleString()}.`);
+    }
+  }
+  if (test.endAt) {
+    const endDate = new Date(test.endAt);
+    if (now > endDate) {
+      throw new Error(`This examination window closed at ${endDate.toLocaleString()}.`);
+    }
+  }
 
   console.log("  -> startAttempt: checking past attempts...");
   const pastAttempts = await getStudentAttemptsForTest(testId, user.uid);

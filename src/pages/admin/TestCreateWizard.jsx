@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { createTest, publishTest } from "../../services/firebase/testService";
+import { useNavigate, useParams } from "react-router-dom";
+import { createTest, updateTest, publishTest, getTestById } from "../../services/firebase/testService";
 import { getQuestions } from "../../services/firebase/questionService";
 import { getQuestionSets } from "../../services/firebase/questionSetService";
 import { getSubjects } from "../../services/firebase/subjectService";
@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 
 export default function TestCreateWizard() {
+  const { testId } = useParams();
   const [step, setStep] = useState(1);
   const [allQuestions, setAllQuestions] = useState([]);
   const [questionSets, setQuestionSets] = useState([]);
@@ -77,6 +78,35 @@ export default function TestCreateWizard() {
         setAllQuestions(qList);
         setQuestionSets(sList);
         setSubjectsList(subList);
+
+        if (testId) {
+          const existing = await getTestById(testId);
+          if (existing) {
+            setFormData({
+              title: existing.title || "",
+              description: existing.description || "",
+              subject: existing.subject || "HTML",
+              instructions: existing.instructions || "",
+              questionIds: existing.questionIds || [],
+              durationMinutes: existing.durationMinutes || 60,
+              attemptLimit: existing.attemptLimit || 1,
+              markingScheme: existing.markingScheme || {
+                positiveMarks: 4,
+                negativeMarks: 1,
+                unansweredMarks: 0
+              },
+              navigationSettings: existing.navigationSettings || {
+                allowRevisit: true,
+                reviewAllowed: true
+              },
+              resultSettings: existing.resultSettings || {
+                showResultImmediately: true,
+                showLeaderboard: true,
+                showExplanations: true
+              }
+            });
+          }
+        }
       } catch (err) {
         console.error(err);
         toast.error("Failed to load question resources.");
@@ -85,7 +115,7 @@ export default function TestCreateWizard() {
       }
     }
     loadResources();
-  }, []);
+  }, [testId]);
 
   const handleApplyQuestionSet = (setId) => {
     setSelectedSetId(setId);
@@ -162,13 +192,21 @@ export default function TestCreateWizard() {
         publicationStatus: publishImmediately ? "published" : "draft"
       };
 
-      const created = await createTest(testPayload);
-
-      if (publishImmediately) {
-        await publishTest(created.id);
-        toast.success("Examination created and published successfully!");
+      let activeId = testId;
+      if (testId) {
+        await updateTest(testId, testPayload);
+        toast.success("Examination configuration updated!");
       } else {
-        toast.success("Examination saved as draft.");
+        const created = await createTest(testPayload);
+        activeId = created.id;
+        if (!publishImmediately) {
+          toast.success("Examination saved as draft.");
+        }
+      }
+
+      if (publishImmediately && activeId) {
+        await publishTest(activeId);
+        toast.success("Examination created and published successfully!");
       }
 
       navigate("/admin/tests");
