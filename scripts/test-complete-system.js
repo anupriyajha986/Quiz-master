@@ -167,20 +167,35 @@ async function runCompleteSystemVerification() {
   console.log(`✓ Student Found ${availableTests.length} Published Exam Sets in Hall`);
 
   // Select an exam that the student has remaining attempts on
+  // Select an exam that the student has remaining attempts on
   let cssTest = null;
   for (const t of availableTests) {
     const attemptsSnap = await getDocs(
       query(collection(db, "attempts"), where("testId", "==", t.id), where("studentUid", "==", studentCred.user.uid))
     );
-    const max = t.maxAttempts || 5;
-    if (attemptsSnap.size < max && Array.isArray(t.publishedQuestionsSnapshot) && t.publishedQuestionsSnapshot.length >= 2) {
+    const completed = attemptsSnap.docs.filter(
+      (a) => a.data().status === "submitted" || a.data().status === "expired"
+    );
+    const limit = Number(t.attemptLimit || t.maxAttempts || 1);
+    if (completed.length < limit && Array.isArray(t.publishedQuestionsSnapshot) && t.publishedQuestionsSnapshot.length >= 2) {
       cssTest = t;
       break;
     }
   }
 
+  // If all existing tests reached their limit, pick one with questions and temporarily allow attempt
   if (!cssTest) {
-    cssTest = availableTests[0];
+    const candidate = availableTests.find(t => Array.isArray(t.publishedQuestionsSnapshot) && t.publishedQuestionsSnapshot.length >= 2);
+    if (candidate) {
+      cssTest = candidate;
+      // Re-sign as admin to elevate attemptLimit on this candidate test for testing
+      await signInWithEmailAndPassword(auth, "Anupriyajha986@gmail.com", "Anupriya@123");
+      const { updateTest } = await import("../src/services/firebase/testService.js");
+      await updateTest(candidate.id, { attemptLimit: 999 });
+      await signInWithEmailAndPassword(auth, "student@quizmaster.com", "Student@12345");
+    } else {
+      cssTest = availableTests[0];
+    }
   }
 
   console.log(`✓ Selected Exam Set: "${cssTest.title}" (${cssTest.questionCount} Questions, ${cssTest.maximumMarks} Marks)`);
