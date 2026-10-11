@@ -1,0 +1,146 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Core helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isUser(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    function isSuperAdmin() {
+      return isAuthenticated() && (
+        ('role' in request.auth.token && request.auth.token.role == 'super_admin') ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'super_admin')
+      );
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        isSuperAdmin() ||
+        ('role' in request.auth.token && request.auth.token.role in ['admin', 'super_admin', 'manager', 'evaluator']) ||
+        ('admin' in request.auth.token && request.auth.token.admin == true) ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin', 'manager', 'evaluator'])
+      );
+    }
+
+    // Users collection
+    match /users/{uid} {
+      allow read: if isUser(uid) || isAdmin();
+      allow create: if isAuthenticated() && (
+        (isUser(uid) && request.resource.data.role == 'student') ||
+        (isAdmin() && request.resource.data.role == 'student') ||
+        isSuperAdmin()
+      );
+      allow update: if (
+        isSuperAdmin() ||
+        (isUser(uid) &&
+          request.resource.data.role == resource.data.role &&
+          request.resource.data.accountStatus == resource.data.accountStatus &&
+          (!('permissions' in request.resource.data) || request.resource.data.permissions == resource.data.permissions)
+        ) ||
+        (isAdmin() &&
+          resource.data.role == 'student' &&
+          request.resource.data.role == 'student'
+        )
+      );
+      allow delete: if isSuperAdmin() || (isAdmin() && resource.data.role == 'student');
+    }
+
+    // Subjects: Authenticated users can read, Admins manage
+    match /subjects/{subjectId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // Question Bank: Strictly restricted to Admins
+    match /questions/{questionId} {
+      allow read, write: if isAdmin();
+    }
+
+    // Answer Keys Vault: Strictly restricted to Admins and trusted backend evaluation
+    match /answerKeys/{testId} {
+      allow read, write: if isAdmin();
+    }
+
+    // Question Sets: Admin management
+    match /questionSets/{setId} {
+      allow read, write: if isAdmin();
+    }
+
+    // Tests collection: Students only read published or scheduled tests; Admins manage all
+    match /tests/{testId} {
+      allow read: if isAuthenticated() && (
+        resource.data.publicationStatus in ['published', 'scheduled'] || isAdmin()
+      );
+      allow write: if isAdmin();
+    }
+
+    // Attempts collection: Students manage their own active attempts; Admins have oversight
+    match /attempts/{attemptId} {
+      allow get: if isAuthenticated() && (isAdmin() || resource.data.studentUid == request.auth.uid);
+      allow list: if isAuthenticated() && (isAdmin() || resource.data.studentUid == request.auth.uid);
+      allow create: if isAuthenticated() && request.resource.data.studentUid == request.auth.uid;
+      allow update: if isAuthenticated() && (
+        isAdmin() || 
+        (resource.data.studentUid == request.auth.uid && resource.data.status == 'in_progress')
+      );
+      allow delete: if isAdmin();
+
+      // Responses subcollection inside attempts
+      match /responses/{questionId} {
+        allow read, write: if isAuthenticated() && (
+          isAdmin() ||
+          get(/databases/$(database)/documents/attempts/$(attemptId)).data.studentUid == request.auth.uid
+        );
+      }
+    }
+
+    // Results collection: Immutable official evaluation records; Admins write, students read only published own results
+    match /results/{resultId} {
+      allow get: if isAuthenticated() && (
+        isAdmin() || 
+        (resource.data.studentUid == request.auth.uid && resource.data.publicationStatus == 'published')
+      );
+      allow list: if isAuthenticated() && (isAdmin() || resource.data.studentUid == request.auth.uid);
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Notifications collection: Targeted reading, self-creation/update for student, Admin broadcasting & management
+    match /notifications/{notificationId} {
+      allow get, list: if isAuthenticated() && (
+        resource.data.recipientUid == 'all' ||
+        resource.data.recipientUid == request.auth.uid ||
+        isAdmin()
+      );
+      allow create: if isAuthenticated() && (
+        isAdmin() ||
+        request.resource.data.recipientUid == request.auth.uid
+      );
+      allow update: if isAuthenticated() && (
+        isAdmin() ||
+        resource.data.recipientUid == request.auth.uid
+      );
+      allow delete: if isAdmin();
+    }
+
+    // Bookmarks: Students manage their own bookmarks, Admins have access
+    match /bookmarks/{bookmarkId} {
+      allow read: if isAuthenticated() && (isAdmin() || resource.data.studentUid == request.auth.uid);
+      allow create: if isAuthenticated() && request.resource.data.studentUid == request.auth.uid;
+      allow update, delete: if isAuthenticated() && (isAdmin() || resource.data.studentUid == request.auth.uid);
+    }
+
+    // Audit Logs: Immutable log records created by authenticated actors, read-only for Admins
+    match /auditLogs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAuthenticated();
+      allow update, delete: if false;
+    }
+  }
+}

@@ -1,0 +1,1723 @@
+{
+  "schemaVersion": 1,
+  "bankId": "technical-placement-assessment-50",
+  "title": "Technical Placement Assessment Test",
+  "description": "50 placement-style technical MCQs from the provided PDF: C, C++, HTML, CSS, and JavaScript.",
+  "source": "Placement_Style_Technical_MCQ_Test_50_Questions.pdf",
+  "suggestedDurationMinutes": 60,
+  "defaultMarking": {
+    "correct": 4,
+    "incorrect": -1,
+    "unattempted": 0
+  },
+  "questionCount": 50,
+  "subjects": [
+    "C",
+    "C++",
+    "HTML",
+    "CSS",
+    "JavaScript"
+  ],
+  "questions": [
+    {
+      "sourceQuestionNumber": 1,
+      "id": "placement50-c-q01",
+      "subject": "C",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "What is the output of the following C code?\nint x = 10;\nprintf(\"%d %d\", x++, ++x);",
+      "options": [
+        {
+          "id": "A",
+          "text": "10 12"
+        },
+        {
+          "id": "B",
+          "text": "11 12"
+        },
+        {
+          "id": "C",
+          "text": "Undefined behavior"
+        },
+        {
+          "id": "D",
+          "text": "10 11"
+        }
+      ],
+      "correctOptionId": "C",
+      "correctOptionIndex": 2,
+      "explanation": "The expression modifies x more than once without the required sequencing; the behavior is undefined in C.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 2,
+      "id": "placement50-c-q02",
+      "subject": "C",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Medium",
+      "questionText": "Which statement about static local variables in C is correct?",
+      "options": [
+        {
+          "id": "A",
+          "text": "They are allocated on the stack every time"
+        },
+        {
+          "id": "B",
+          "text": "They retain their value between function calls"
+        },
+        {
+          "id": "C",
+          "text": "They can only be used inside main()"
+        },
+        {
+          "id": "D",
+          "text": "They are automatically initialized with garbage value"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "A static local variable retains its stored value between function calls and has static storage duration.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 3,
+      "id": "placement50-c-q03",
+      "subject": "C",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "Consider:\nint a[] = {10,20,30,40};\nint *p = a;\nprintf(\"%d\", *(p++));\nWhat is printed?",
+      "options": [
+        {
+          "id": "A",
+          "text": "10"
+        },
+        {
+          "id": "B",
+          "text": "20"
+        },
+        {
+          "id": "C",
+          "text": "Address of a"
+        },
+        {
+          "id": "D",
+          "text": "Compilation error"
+        }
+      ],
+      "correctOptionId": "A",
+      "correctOptionIndex": 0,
+      "explanation": "Post-increment returns the current pointer value for dereferencing, so the first array element, 10, is printed.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 4,
+      "id": "placement50-c-q04",
+      "subject": "C",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "Which of the following can cause undefined behavior in C?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Accessing an array within bounds"
+        },
+        {
+          "id": "B",
+          "text": "Dereferencing a NULL pointer"
+        },
+        {
+          "id": "C",
+          "text": "Initializing a pointer"
+        },
+        {
+          "id": "D",
+          "text": "Using sizeof(int)"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "Dereferencing a null pointer has undefined behavior.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 5,
+      "id": "placement50-c-q05",
+      "subject": "C",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "What is the value of sizeof(\"ABCDE\") in C?",
+      "options": [
+        {
+          "id": "A",
+          "text": "5"
+        },
+        {
+          "id": "B",
+          "text": "6"
+        },
+        {
+          "id": "C",
+          "text": "4"
+        },
+        {
+          "id": "D",
+          "text": "Depends on compiler"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "A string literal includes a terminating null character, so the array size is 6.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 6,
+      "id": "placement50-c-q06",
+      "subject": "C",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Medium",
+      "questionText": "Which declaration represents a pointer to a function returning int?",
+      "options": [
+        {
+          "id": "A",
+          "text": "int *f();"
+        },
+        {
+          "id": "B",
+          "text": "int (*f)();"
+        },
+        {
+          "id": "C",
+          "text": "int f*();"
+        },
+        {
+          "id": "D",
+          "text": "(*int f)();"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "Parentheses make f a pointer to a function returning int.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 7,
+      "id": "placement50-c-q07",
+      "subject": "C",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Medium",
+      "questionText": "What is the primary purpose of the volatile keyword in C?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Prevent modification of a variable"
+        },
+        {
+          "id": "B",
+          "text": "Force a variable into CPU register"
+        },
+        {
+          "id": "C",
+          "text": "Inform compiler that value may change unexpectedly"
+        },
+        {
+          "id": "D",
+          "text": "Allocate variable dynamically"
+        }
+      ],
+      "correctOptionId": "C",
+      "correctOptionIndex": 2,
+      "explanation": "volatile tells the compiler that the value may change in ways not apparent from ordinary program flow.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 8,
+      "id": "placement50-c-q08",
+      "subject": "C",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "Which memory allocation function initializes allocated memory to zero?",
+      "options": [
+        {
+          "id": "A",
+          "text": "malloc()"
+        },
+        {
+          "id": "B",
+          "text": "realloc()"
+        },
+        {
+          "id": "C",
+          "text": "calloc()"
+        },
+        {
+          "id": "D",
+          "text": "alloc()"
+        }
+      ],
+      "correctOptionId": "C",
+      "correctOptionIndex": 2,
+      "explanation": "calloc allocates space for an array and initializes its bytes to zero.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 9,
+      "id": "placement50-c-q09",
+      "subject": "C",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "What does pointer arithmetic depend upon?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Size of pointer variable only"
+        },
+        {
+          "id": "B",
+          "text": "Size of pointed data type"
+        },
+        {
+          "id": "C",
+          "text": "Compiler optimization only"
+        },
+        {
+          "id": "D",
+          "text": "CPU clock speed"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "Pointer increments are scaled by the size of the pointed-to type.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 10,
+      "id": "placement50-c-q10",
+      "subject": "C",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "Which situation creates a dangling pointer?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Pointer initialized to NULL"
+        },
+        {
+          "id": "B",
+          "text": "Pointer pointing to dynamically allocated memory after it is freed"
+        },
+        {
+          "id": "C",
+          "text": "Pointer pointing to a global variable"
+        },
+        {
+          "id": "D",
+          "text": "Pointer pointing to a constant"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "After the pointed-to allocation is freed, a pointer retaining that address is dangling.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 11,
+      "id": "placement50-cpp-q11",
+      "subject": "C++",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "Which concept allows the same function name to have different parameter lists?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Overriding"
+        },
+        {
+          "id": "B",
+          "text": "Encapsulation"
+        },
+        {
+          "id": "C",
+          "text": "Function overloading"
+        },
+        {
+          "id": "D",
+          "text": "Abstraction"
+        }
+      ],
+      "correctOptionId": "C",
+      "correctOptionIndex": 2,
+      "explanation": "Function overloading defines multiple functions with the same name but different parameter lists.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 12,
+      "id": "placement50-cpp-q12",
+      "subject": "C++",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "What is the main purpose of a virtual function in C++?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Static binding"
+        },
+        {
+          "id": "B",
+          "text": "Compile-time polymorphism"
+        },
+        {
+          "id": "C",
+          "text": "Runtime polymorphism"
+        },
+        {
+          "id": "D",
+          "text": "Memory allocation"
+        }
+      ],
+      "correctOptionId": "C",
+      "correctOptionIndex": 2,
+      "explanation": "Virtual functions enable dynamic dispatch through base-class pointers or references.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 13,
+      "id": "placement50-cpp-q13",
+      "subject": "C++",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Hard",
+      "questionText": "What happens when a derived class object is deleted through a base-class pointer without a virtual destructor?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Always safe"
+        },
+        {
+          "id": "B",
+          "text": "Compile-time error"
+        },
+        {
+          "id": "C",
+          "text": "Undefined behavior"
+        },
+        {
+          "id": "D",
+          "text": "Constructor is called twice"
+        }
+      ],
+      "correctOptionId": "C",
+      "correctOptionIndex": 2,
+      "explanation": "Deleting a derived object through a base pointer when the base destructor is non-virtual has undefined behavior in this situation.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 14,
+      "id": "placement50-cpp-q14",
+      "subject": "C++",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "Which statement about references in C++ is correct?",
+      "options": [
+        {
+          "id": "A",
+          "text": "A reference can normally be reseated to another object"
+        },
+        {
+          "id": "B",
+          "text": "A reference must be initialized when declared"
+        },
+        {
+          "id": "C",
+          "text": "A reference always occupies separate storage"
+        },
+        {
+          "id": "D",
+          "text": "References can only refer to pointers"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "A reference must be initialized when it is declared and cannot later be reseated.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 15,
+      "id": "placement50-cpp-q15",
+      "subject": "C++",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Hard",
+      "questionText": "What is the output?\nint x = 10;\nint &r; = x;\nr = 25;\ncout << x;",
+      "options": [
+        {
+          "id": "A",
+          "text": "10"
+        },
+        {
+          "id": "B",
+          "text": "25"
+        },
+        {
+          "id": "C",
+          "text": "Address of x"
+        },
+        {
+          "id": "D",
+          "text": "Compilation error"
+        }
+      ],
+      "correctOptionId": "D",
+      "correctOptionIndex": 3,
+      "explanation": "The source PDF prints `int &r; = x;`, which is malformed C++ syntax; as printed, it does not compile. Review the source before changing it to the likely intended `int &r = x;`.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": true
+    },
+    {
+      "sourceQuestionNumber": 16,
+      "id": "placement50-cpp-q16",
+      "subject": "C++",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "Which feature of C++ allows a class to inherit properties from more than one base class?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Multilevel inheritance"
+        },
+        {
+          "id": "B",
+          "text": "Multiple inheritance"
+        },
+        {
+          "id": "C",
+          "text": "Hierarchical inheritance"
+        },
+        {
+          "id": "D",
+          "text": "Single inheritance"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "Multiple inheritance allows a class to derive from more than one base class.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 17,
+      "id": "placement50-cpp-q17",
+      "subject": "C++",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Medium",
+      "questionText": "Which operator cannot be overloaded in C++?",
+      "options": [
+        {
+          "id": "A",
+          "text": "+"
+        },
+        {
+          "id": "B",
+          "text": "[]"
+        },
+        {
+          "id": "C",
+          "text": "::"
+        },
+        {
+          "id": "D",
+          "text": "=="
+        }
+      ],
+      "correctOptionId": "C",
+      "correctOptionIndex": 2,
+      "explanation": "The scope-resolution operator `::` cannot be overloaded.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 18,
+      "id": "placement50-cpp-q18",
+      "subject": "C++",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "What is the purpose of a copy constructor?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Destroy an object"
+        },
+        {
+          "id": "B",
+          "text": "Create an object from another object of the same class"
+        },
+        {
+          "id": "C",
+          "text": "Allocate dynamic memory only"
+        },
+        {
+          "id": "D",
+          "text": "Convert class into structure"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "A copy constructor initializes a new object from an existing object of the same class.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 19,
+      "id": "placement50-cpp-q19",
+      "subject": "C++",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "Which of the following provides compile-time polymorphism?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Virtual functions"
+        },
+        {
+          "id": "B",
+          "text": "Function overloading"
+        },
+        {
+          "id": "C",
+          "text": "Dynamic binding"
+        },
+        {
+          "id": "D",
+          "text": "Runtime overriding"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "Function overloading is resolved at compile time.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 20,
+      "id": "placement50-cpp-q20",
+      "subject": "C++",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "What is the role of the this pointer in C++?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Points to the parent class"
+        },
+        {
+          "id": "B",
+          "text": "Points to the current object"
+        },
+        {
+          "id": "C",
+          "text": "Points to static memory"
+        },
+        {
+          "id": "D",
+          "text": "Points to the compiler"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "Within a non-static member function, `this` points to the current object.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 21,
+      "id": "placement50-html-q21",
+      "subject": "HTML",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "Which HTML5 element is most appropriate for independent, self-contained content?",
+      "options": [
+        {
+          "id": "A",
+          "text": "<section>"
+        },
+        {
+          "id": "B",
+          "text": "<article>"
+        },
+        {
+          "id": "C",
+          "text": "<div>"
+        },
+        {
+          "id": "D",
+          "text": "<span>"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "The article element represents self-contained content that can stand independently.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 22,
+      "id": "placement50-html-q22",
+      "subject": "HTML",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Medium",
+      "questionText": "What is the purpose of the defer attribute in a <script> tag?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Prevent JavaScript execution permanently"
+        },
+        {
+          "id": "B",
+          "text": "Execute script after HTML parsing is completed"
+        },
+        {
+          "id": "C",
+          "text": "Execute script before parsing begins"
+        },
+        {
+          "id": "D",
+          "text": "Convert JavaScript into CSS"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "A deferred external classic script executes after document parsing, before DOMContentLoaded, while preserving document order.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 23,
+      "id": "placement50-html-q23",
+      "subject": "HTML",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "Which attribute improves accessibility by providing alternative text for an image?",
+      "options": [
+        {
+          "id": "A",
+          "text": "title"
+        },
+        {
+          "id": "B",
+          "text": "alt"
+        },
+        {
+          "id": "C",
+          "text": "src"
+        },
+        {
+          "id": "D",
+          "text": "aria-hidden"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "The alt attribute supplies a text alternative for an image.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 24,
+      "id": "placement50-html-q24",
+      "subject": "HTML",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "Which HTML element is semantically intended for navigation links?",
+      "options": [
+        {
+          "id": "A",
+          "text": "<navigate>"
+        },
+        {
+          "id": "B",
+          "text": "<links>"
+        },
+        {
+          "id": "C",
+          "text": "<nav>"
+        },
+        {
+          "id": "D",
+          "text": "<menuitem>"
+        }
+      ],
+      "correctOptionId": "C",
+      "correctOptionIndex": 2,
+      "explanation": "The nav element identifies a section of navigation links.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 25,
+      "id": "placement50-html-q25",
+      "subject": "HTML",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "What is the difference between id and class in HTML?",
+      "options": [
+        {
+          "id": "A",
+          "text": "id is generally unique; class can be reused"
+        },
+        {
+          "id": "B",
+          "text": "class must always be unique"
+        },
+        {
+          "id": "C",
+          "text": "Both must always be unique"
+        },
+        {
+          "id": "D",
+          "text": "There is no difference"
+        }
+      ],
+      "correctOptionId": "A",
+      "correctOptionIndex": 0,
+      "explanation": "An id is intended to identify one element uniquely in a document; a class can be shared.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 26,
+      "id": "placement50-html-q26",
+      "subject": "HTML",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "Which input type provides built-in browser validation for an email address?",
+      "options": [
+        {
+          "id": "A",
+          "text": "text"
+        },
+        {
+          "id": "B",
+          "text": "mail"
+        },
+        {
+          "id": "C",
+          "text": "email"
+        },
+        {
+          "id": "D",
+          "text": "validate-email"
+        }
+      ],
+      "correctOptionId": "C",
+      "correctOptionIndex": 2,
+      "explanation": "`type=\"email\"` provides built-in email-format validation by supporting browsers.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 27,
+      "id": "placement50-html-q27",
+      "subject": "HTML",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "What is the purpose of the data-* attribute?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Store custom data associated with an HTML element"
+        },
+        {
+          "id": "B",
+          "text": "Define CSS animations"
+        },
+        {
+          "id": "C",
+          "text": "Execute JavaScript automatically"
+        },
+        {
+          "id": "D",
+          "text": "Create database tables"
+        }
+      ],
+      "correctOptionId": "A",
+      "correctOptionIndex": 0,
+      "explanation": "Custom data attributes expose element-specific data to scripts through the DOM dataset API.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 28,
+      "id": "placement50-html-q28",
+      "subject": "HTML",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "Which element is used to associate a caption with a <figure>?",
+      "options": [
+        {
+          "id": "A",
+          "text": "<caption>"
+        },
+        {
+          "id": "B",
+          "text": "<figcaption>"
+        },
+        {
+          "id": "C",
+          "text": "<description>"
+        },
+        {
+          "id": "D",
+          "text": "<label>"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "figcaption provides a caption or legend for its parent figure.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 29,
+      "id": "placement50-html-q29",
+      "subject": "HTML",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Medium",
+      "questionText": "Which HTML mechanism is primarily used to provide responsive images based on screen conditions?",
+      "options": [
+        {
+          "id": "A",
+          "text": "<responsive>"
+        },
+        {
+          "id": "B",
+          "text": "<picture>"
+        },
+        {
+          "id": "C",
+          "text": "<media>"
+        },
+        {
+          "id": "D",
+          "text": "<responsive-img>"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "The picture element can provide alternative image sources selected by media conditions and supported formats.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 30,
+      "id": "placement50-html-q30",
+      "subject": "HTML",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "Which attribute is used to specify that a form control must be filled before submission?",
+      "options": [
+        {
+          "id": "A",
+          "text": "validate"
+        },
+        {
+          "id": "B",
+          "text": "mandatory"
+        },
+        {
+          "id": "C",
+          "text": "required"
+        },
+        {
+          "id": "D",
+          "text": "mustfill"
+        }
+      ],
+      "correctOptionId": "C",
+      "correctOptionIndex": 2,
+      "explanation": "The required attribute makes a supported form control mandatory before normal submission.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 31,
+      "id": "placement50-css-q31",
+      "subject": "CSS",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Hard",
+      "questionText": "What is the specificity of #box .item p?",
+      "options": [
+        {
+          "id": "A",
+          "text": "0-1-1-1"
+        },
+        {
+          "id": "B",
+          "text": "1-1-1-0"
+        },
+        {
+          "id": "C",
+          "text": "1-0-2-0"
+        },
+        {
+          "id": "D",
+          "text": "0-2-1-1"
+        }
+      ],
+      "correctOptionId": "A",
+      "correctOptionIndex": 0,
+      "explanation": "Using the four-part convention (inline, IDs, classes/attributes/pseudo-classes, elements/pseudo-elements), the selector has 0 inline, 1 ID, 1 class, and 1 element: 0-1-1-1.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 32,
+      "id": "placement50-css-q32",
+      "subject": "CSS",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Medium",
+      "questionText": "Which CSS property establishes a new stacking context when used with certain values?",
+      "options": [
+        {
+          "id": "A",
+          "text": "z-index alone in every situation"
+        },
+        {
+          "id": "B",
+          "text": "opacity with a value less than 1"
+        },
+        {
+          "id": "C",
+          "text": "color"
+        },
+        {
+          "id": "D",
+          "text": "font-size"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "An element with opacity less than 1 creates a stacking context.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 33,
+      "id": "placement50-css-q33",
+      "subject": "CSS",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "In Flexbox, which property controls alignment along the main axis?",
+      "options": [
+        {
+          "id": "A",
+          "text": "align-items"
+        },
+        {
+          "id": "B",
+          "text": "justify-content"
+        },
+        {
+          "id": "C",
+          "text": "align-content"
+        },
+        {
+          "id": "D",
+          "text": "place-items"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "justify-content distributes flex items along the main axis.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 34,
+      "id": "placement50-css-q34",
+      "subject": "CSS",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "What does box-sizing: border-box do?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Excludes padding from width calculation"
+        },
+        {
+          "id": "B",
+          "text": "Includes padding and border within specified width/height"
+        },
+        {
+          "id": "C",
+          "text": "Removes borders"
+        },
+        {
+          "id": "D",
+          "text": "Makes the element inline"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "With border-box, the declared width and height include content, padding, and border.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 35,
+      "id": "placement50-css-q35",
+      "subject": "CSS",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Medium",
+      "questionText": "Which selector has the highest specificity?",
+      "options": [
+        {
+          "id": "A",
+          "text": ".container .item"
+        },
+        {
+          "id": "B",
+          "text": "#container .item"
+        },
+        {
+          "id": "C",
+          "text": "div.item"
+        },
+        {
+          "id": "D",
+          "text": "div"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "An ID selector plus a class selector outranks selectors containing only classes or element selectors.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 36,
+      "id": "placement50-css-q36",
+      "subject": "CSS",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "What is the main difference between display: none and visibility: hidden?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Both remove the element from layout"
+        },
+        {
+          "id": "B",
+          "text": "display:none removes it from layout; visibility:hidden generally preserves its space"
+        },
+        {
+          "id": "C",
+          "text": "visibility:hidden removes it from layout"
+        },
+        {
+          "id": "D",
+          "text": "There is no difference"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "display:none removes the element's box from layout; visibility:hidden keeps its layout space.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 37,
+      "id": "placement50-css-q37",
+      "subject": "CSS",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Medium",
+      "questionText": "What does position: sticky generally depend on to determine its sticking behavior?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Only z-index"
+        },
+        {
+          "id": "B",
+          "text": "A threshold such as top, relative to the scrolling container"
+        },
+        {
+          "id": "C",
+          "text": "Only display:flex"
+        },
+        {
+          "id": "D",
+          "text": "Only float"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "Sticky positioning needs an inset threshold such as top and behaves relative to its relevant scrolling container.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 38,
+      "id": "placement50-css-q38",
+      "subject": "CSS",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "Which unit is relative to the root element's font size?",
+      "options": [
+        {
+          "id": "A",
+          "text": "em"
+        },
+        {
+          "id": "B",
+          "text": "%"
+        },
+        {
+          "id": "C",
+          "text": "rem"
+        },
+        {
+          "id": "D",
+          "text": "vh"
+        }
+      ],
+      "correctOptionId": "C",
+      "correctOptionIndex": 2,
+      "explanation": "rem is relative to the root element's font size.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 39,
+      "id": "placement50-css-q39",
+      "subject": "CSS",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "What does the CSS selector :nth-child(2n) select?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Odd children"
+        },
+        {
+          "id": "B",
+          "text": "Every second child"
+        },
+        {
+          "id": "C",
+          "text": "Only the second child"
+        },
+        {
+          "id": "D",
+          "text": "Last two children"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "2n matches even-numbered child positions: 2, 4, 6, and so on.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 40,
+      "id": "placement50-css-q40",
+      "subject": "CSS",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "Which CSS feature is specifically designed for two-dimensional layouts?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Flexbox"
+        },
+        {
+          "id": "B",
+          "text": "CSS Grid"
+        },
+        {
+          "id": "C",
+          "text": "Float"
+        },
+        {
+          "id": "D",
+          "text": "Inline-block"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "CSS Grid supports row-and-column, two-dimensional layouts.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 41,
+      "id": "placement50-javascript-q41",
+      "subject": "JavaScript",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "What is the output of console.log(typeof null);?",
+      "options": [
+        {
+          "id": "A",
+          "text": "\"null\""
+        },
+        {
+          "id": "B",
+          "text": "\"object\""
+        },
+        {
+          "id": "C",
+          "text": "\"undefined\""
+        },
+        {
+          "id": "D",
+          "text": "\"None\""
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "For historical compatibility, typeof null returns the string \"object\".",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 42,
+      "id": "placement50-javascript-q42",
+      "subject": "JavaScript",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "What is the main difference between == and === in JavaScript?",
+      "options": [
+        {
+          "id": "A",
+          "text": "=== performs type coercion"
+        },
+        {
+          "id": "B",
+          "text": "== checks only type"
+        },
+        {
+          "id": "C",
+          "text": "=== checks value and type without implicit coercion"
+        },
+        {
+          "id": "D",
+          "text": "No difference"
+        }
+      ],
+      "correctOptionId": "C",
+      "correctOptionIndex": 2,
+      "explanation": "Strict equality does not perform the implicit type coercion associated with loose equality.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 43,
+      "id": "placement50-javascript-q43",
+      "subject": "JavaScript",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Medium",
+      "questionText": "What is a closure in JavaScript?",
+      "options": [
+        {
+          "id": "A",
+          "text": "A function that remembers variables from its lexical scope"
+        },
+        {
+          "id": "B",
+          "text": "A function that cannot return a value"
+        },
+        {
+          "id": "C",
+          "text": "A loop termination mechanism"
+        },
+        {
+          "id": "D",
+          "text": "A method for closing the browser"
+        }
+      ],
+      "correctOptionId": "A",
+      "correctOptionIndex": 0,
+      "explanation": "A closure retains access to bindings from its lexical environment.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 44,
+      "id": "placement50-javascript-q44",
+      "subject": "JavaScript",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "What is the output of console.log(2 + \"2\" + 2);?",
+      "options": [
+        {
+          "id": "A",
+          "text": "6"
+        },
+        {
+          "id": "B",
+          "text": "222"
+        },
+        {
+          "id": "C",
+          "text": "24"
+        },
+        {
+          "id": "D",
+          "text": "42"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "The first addition converts 2 to a string, and the following addition concatenates another 2, producing \"222\".",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 45,
+      "id": "placement50-javascript-q45",
+      "subject": "JavaScript",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "Which keyword creates a block-scoped variable that cannot be reassigned?",
+      "options": [
+        {
+          "id": "A",
+          "text": "var"
+        },
+        {
+          "id": "B",
+          "text": "let"
+        },
+        {
+          "id": "C",
+          "text": "const"
+        },
+        {
+          "id": "D",
+          "text": "static"
+        }
+      ],
+      "correctOptionId": "C",
+      "correctOptionIndex": 2,
+      "explanation": "const declares a block-scoped binding that cannot be reassigned, though an object it references may still be mutable.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 46,
+      "id": "placement50-javascript-q46",
+      "subject": "JavaScript",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Hard",
+      "questionText": "What is the output of console.log([] == false);?",
+      "options": [
+        {
+          "id": "A",
+          "text": "true"
+        },
+        {
+          "id": "B",
+          "text": "false"
+        },
+        {
+          "id": "C",
+          "text": "undefined"
+        },
+        {
+          "id": "D",
+          "text": "Error"
+        }
+      ],
+      "correctOptionId": "A",
+      "correctOptionIndex": 0,
+      "explanation": "Loose equality converts the empty array to an empty string and then to numeric zero; false also converts to zero.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 47,
+      "id": "placement50-javascript-q47",
+      "subject": "JavaScript",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "Which statement about JavaScript promises is correct?",
+      "options": [
+        {
+          "id": "A",
+          "text": "A Promise can only represent success"
+        },
+        {
+          "id": "B",
+          "text": "A Promise can be pending, fulfilled, or rejected"
+        },
+        {
+          "id": "C",
+          "text": "A Promise executes synchronously only"
+        },
+        {
+          "id": "D",
+          "text": "A Promise cannot handle asynchronous operations"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "A Promise has pending, fulfilled, or rejected states.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 48,
+      "id": "placement50-javascript-q48",
+      "subject": "JavaScript",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Medium",
+      "questionText": "What does the event loop primarily coordinate?",
+      "options": [
+        {
+          "id": "A",
+          "text": "CSS rendering only"
+        },
+        {
+          "id": "B",
+          "text": "Execution of synchronous code and processing of asynchronous callbacks/tasks"
+        },
+        {
+          "id": "C",
+          "text": "Database table creation"
+        },
+        {
+          "id": "D",
+          "text": "HTML compilation"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "The event loop coordinates task and microtask processing with JavaScript execution; browser rendering has its own scheduling interactions.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 49,
+      "id": "placement50-javascript-q49",
+      "subject": "JavaScript",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "What is the output?\nlet x = 10;\nfunction test() { let x = 20; console.log(x); }\ntest();",
+      "options": [
+        {
+          "id": "A",
+          "text": "10"
+        },
+        {
+          "id": "B",
+          "text": "20"
+        },
+        {
+          "id": "C",
+          "text": "undefined"
+        },
+        {
+          "id": "D",
+          "text": "Error"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "The function's local `x` shadows the outer variable, so it logs 20.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    },
+    {
+      "sourceQuestionNumber": 50,
+      "id": "placement50-javascript-q50",
+      "subject": "JavaScript",
+      "setCode": "placement-technical-50",
+      "questionType": "single_correct_mcq",
+      "difficulty": "Easy",
+      "questionText": "What is the result of console.log(NaN === NaN);?",
+      "options": [
+        {
+          "id": "A",
+          "text": "true"
+        },
+        {
+          "id": "B",
+          "text": "false"
+        },
+        {
+          "id": "C",
+          "text": "undefined"
+        },
+        {
+          "id": "D",
+          "text": "Error"
+        }
+      ],
+      "correctOptionId": "B",
+      "correctOptionIndex": 1,
+      "explanation": "NaN is not strictly equal to itself; use Number.isNaN to test for NaN.",
+      "marksCorrect": 4,
+      "marksIncorrect": -1,
+      "status": "draft",
+      "reviewRequired": false
+    }
+  ]
+}
