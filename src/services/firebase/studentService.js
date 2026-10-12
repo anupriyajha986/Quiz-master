@@ -69,14 +69,46 @@ export async function getStudentAttempts(uid) {
 }
 
 export async function getStudentResults(uid) {
-  const q = query(
+  if (!uid) return [];
+
+  // Query results by studentUid (existing schema) and studentId (new schema)
+  const qUid = query(
     collection(db, "results"),
-    where("studentUid", "==", uid),
-    where("publicationStatus", "==", "published")
+    where("studentUid", "==", uid)
   );
-  const snap = await getDocs(q);
-  const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-  list.sort((a, b) => new Date(b.evaluatedAt || 0) - new Date(a.evaluatedAt || 0));
+
+  const qId = query(
+    collection(db, "results"),
+    where("studentId", "==", uid)
+  );
+
+  const [snapUid, snapId] = await Promise.all([
+    getDocs(qUid).catch((err) => {
+      console.warn("Could not query results by studentUid:", err);
+      return { docs: [] };
+    }),
+    getDocs(qId).catch((err) => {
+      console.warn("Could not query results by studentId:", err);
+      return { docs: [] };
+    })
+  ]);
+
+  const map = new Map();
+  [...snapUid.docs, ...snapId.docs].forEach((d) => {
+    map.set(d.id, { id: d.id, ...d.data() });
+  });
+
+  const list = Array.from(map.values()).filter((r) => {
+    // Only exclude if explicitly hidden or archived
+    return r.publicationStatus !== "hidden" && r.publicationStatus !== "archived";
+  });
+
+  list.sort((a, b) => {
+    const timeA = new Date(a.evaluatedAt || a.submittedAt || 0).getTime();
+    const timeB = new Date(b.evaluatedAt || b.submittedAt || 0).getTime();
+    return timeB - timeA;
+  });
+
   return list;
 }
 

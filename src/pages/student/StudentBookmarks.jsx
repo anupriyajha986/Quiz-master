@@ -159,6 +159,14 @@ export default function StudentBookmarks() {
                     <span className="text-[11px] text-[#64748B] font-medium truncate">
                       From: {item.testTitle || "Mock Test"}
                     </span>
+                    {item.testId && (
+                      <Link
+                        to={`/student/exams/${item.testId}/instructions`}
+                        className="text-[11px] text-[#2563EB] hover:underline font-semibold"
+                      >
+                        View Test &rarr;
+                      </Link>
+                    )}
                     <span className="text-[10px] text-[#94A3B8] ml-auto">
                       Saved {formatDate(item.createdAt)}
                     </span>

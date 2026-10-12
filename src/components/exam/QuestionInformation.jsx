@@ -1,7 +1,7 @@
 import React from "react";
-import { FileText } from "lucide-react";
+import { FileText, Bookmark } from "lucide-react";
 
-export default function QuestionInformation({ question }) {
+export default function QuestionInformation({ question, onBookmark, isBookmarked }) {
   if (!question) return null;
 
   const pos = question.positiveMarks ?? 4;
@@ -25,51 +25,71 @@ export default function QuestionInformation({ question }) {
 
   return (
     <div className="bg-white rounded-2xl border border-[#DCE5F0] p-4 shadow-2xs flex flex-col justify-between">
-      {/* Card Header */}
-      <div className="flex items-center gap-2 mb-3 pb-2 border-b border-[#E2E8F0]">
-        <FileText className="w-4 h-4 text-[#0B63F6]" />
-        <h4 className="text-xs font-bold text-[#111C3A]">
-          Question Information
-        </h4>
+      <div>
+        {/* Card Header */}
+        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-[#E2E8F0]">
+          <FileText className="w-4 h-4 text-[#0B63F6]" />
+          <h4 className="text-xs font-bold text-[#111C3A]">
+            Question Information
+          </h4>
+        </div>
+
+        {/* Table Data */}
+        <div className="space-y-2 text-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-[#52627F]">Question Type</span>
+            <span className="font-semibold text-[#111C3A]">{questionTypeLabel}</span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-[#52627F]">Marks</span>
+            <span className="font-semibold text-[#111C3A]">
+              +{pos} for correct, -{neg} for incorrect
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-[#52627F]">Subject</span>
+            <span className="font-semibold text-[#111C3A]">
+              {question.subject || "General"}
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-[#52627F]">Topic</span>
+            <span className="font-semibold text-[#111C3A]">
+              {question.topic || "General Concepts"}
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-[#52627F]">Difficulty</span>
+            <span
+              className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${diffBadgeClass}`}
+            >
+              {difficulty}
+            </span>
+          </div>
+        </div>
       </div>
 
-      {/* Table Data */}
-      <div className="space-y-2 text-xs">
-        <div className="flex items-center justify-between">
-          <span className="text-[#52627F]">Question Type</span>
-          <span className="font-semibold text-[#111C3A]">{questionTypeLabel}</span>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <span className="text-[#52627F]">Marks</span>
-          <span className="font-semibold text-[#111C3A]">
-            +{pos} for correct, -{neg} for incorrect
-          </span>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <span className="text-[#52627F]">Subject</span>
-          <span className="font-semibold text-[#111C3A]">
-            {question.subject || "General"}
-          </span>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <span className="text-[#52627F]">Topic</span>
-          <span className="font-semibold text-[#111C3A]">
-            {question.topic || "General Concepts"}
-          </span>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <span className="text-[#52627F]">Difficulty</span>
-          <span
-            className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${diffBadgeClass}`}
+      {/* Bookmark Action */}
+      {onBookmark && (
+        <div className="pt-3 mt-3 border-t border-[#E2E8F0]">
+          <button
+            type="button"
+            onClick={onBookmark}
+            className={`w-full py-1.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+              isBookmarked
+                ? "bg-[#FEF3C7] text-[#D97706] border border-[#FDE68A]"
+                : "bg-[#F8FAFD] text-[#0866F5] hover:bg-[#EAF2FF] border border-[#E5ECF5]"
+            }`}
           >
-            {difficulty}
-          </span>
+            <Bookmark className={`w-3.5 h-3.5 ${isBookmarked ? "fill-current" : ""}`} />
+            <span>{isBookmarked ? "Saved in Bookmarks" : "Bookmark for Revision"}</span>
+          </button>
         </div>
-      </div>
+      )}
     </div>
   );
 }

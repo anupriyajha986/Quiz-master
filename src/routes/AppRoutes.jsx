@@ -25,6 +25,7 @@ const ForgotPasswordPage = lazy(() => import("../pages/public/ForgotPasswordPage
 // Student Pages
 const StudentDashboard = lazy(() => import("../pages/student/StudentDashboard"));
 const AvailableExams = lazy(() => import("../pages/student/AvailableExams"));
+const MyExams = lazy(() => import("../pages/student/MyExams"));
 const ExamInstructions = lazy(() => import("../pages/student/ExamInstructions"));
 const ExamLivePage = lazy(() => import("../pages/student/ExamLivePage"));
 const StudentResults = lazy(() => import("../pages/student/StudentResults"));
@@ -97,7 +98,7 @@ export default function AppRoutes() {
         <Route index element={<Navigate to="/student/dashboard" replace />} />
         <Route path="dashboard" element={<StudentDashboard />} />
         <Route path="exams" element={<AvailableExams />} />
-        <Route path="my-exams" element={<AvailableExams />} />
+        <Route path="my-exams" element={<MyExams />} />
         <Route path="active-attempts" element={<StudentActiveAttempts />} />
         <Route path="exams/:testId/instructions" element={<ExamInstructions />} />
         <Route path="results" element={<StudentResults />} />

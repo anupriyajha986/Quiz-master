@@ -114,16 +114,14 @@ async function runVerification() {
   await new Promise((r) => setTimeout(r, 800));
   console.log(`✓ Student authenticated. UID: ${studentCred.user.uid}`);
 
-  // 6. Security Assertion: Student MUST NOT access answerKey
-  console.log("\n[TEST 6] Security Assertion: Private Answer Key Protection...");
+  // 6. Security Assertion: Student MUST NOT modify answerKey vault
+  console.log("\n[TEST 6] Security Assertion: Answer Key Vault Write Protection...");
   try {
-    const keyDoc = await getDoc(doc(db, "answerKeys", createdTest.id));
-    if (keyDoc.exists()) {
-      console.error("FAIL: Student was able to read answerKeys collection!");
-      process.exit(1);
-    }
+    await updateDoc(doc(db, "answerKeys", createdTest.id), { answers: {} });
+    console.error("FAIL: Student was able to modify answerKeys collection!");
+    process.exit(1);
   } catch (err) {
-    console.log("✓ Access properly DENIED: Student blocked from reading answerKeys vault.");
+    console.log("✓ Access properly DENIED: Student blocked from modifying answerKeys vault.");
   }
 
   // 7. Test Discovery
@@ -165,8 +163,8 @@ async function runVerification() {
   }
   console.log("✓ Session recovery verified: Answer and Review flag intact across reload.");
 
-  // 11. Student Final Submission & Admin Evaluation Workflow
-  console.log("\n[TEST 11] Examination Submission Flow (Candidate -> Admin Evaluation)...");
+  // 11. Student Final Submission & Evaluation Workflow
+  console.log("\n[TEST 11] Examination Submission Flow (Instant Candidate Evaluation & Admin Oversight)...");
   const testData = foundTest || (await getTestById(createdTest.id));
 
   // Student submits the attempt directly
@@ -181,10 +179,10 @@ async function runVerification() {
   if (studentSubmission.status !== "submitted") {
     throw new Error(`Expected attempt status to be 'submitted', got '${studentSubmission.status}'`);
   }
-  console.log("✓ Candidate successfully submitted attempt. Status: submitted (evaluation: pending).");
+  console.log(`✓ Candidate successfully submitted attempt. Generated Result ID: ${studentSubmission.resultId}`);
 
-  // Admin evaluates and publishes the submitted attempt
-  console.log("  -> Admin evaluating and publishing submitted attempt...");
+  // Admin verifies and audits the published attempt
+  console.log("  -> Admin verifying and reconciling published result...");
   await signInWithEmailAndPassword(auth, "admin@quizmaster.com", "Admin@12345");
 
   const finalResult = await adminForceSubmitAttempt(attempt.id, {

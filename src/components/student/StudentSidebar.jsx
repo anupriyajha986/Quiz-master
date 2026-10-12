@@ -95,7 +95,7 @@ export default function StudentSidebar({ onCloseMobile }) {
             const Icon = item.icon;
             const isActive =
               location.pathname === item.path ||
-              (item.path !== "/student/dashboard" && location.pathname.startsWith(item.path));
+              (item.path !== "/student/dashboard" && location.pathname.startsWith(item.path + "/"));
             return (
               <Link
                 key={item.path}

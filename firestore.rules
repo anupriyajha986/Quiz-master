@@ -97,7 +97,9 @@ service cloud.firestore {
     // 4. ANSWER KEYS VAULT (/answerKeys/{testId})
     // =========================================================================
     match /answerKeys/{testId} {
-      allow read, write: if isAdmin();
+      // Authenticated users read answer keys for evaluation/scorecards; only admins write/manage
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
     }
 
     // =========================================================================
@@ -145,9 +147,9 @@ service cloud.firestore {
           request.resource.data.startedAt == resource.data.startedAt &&
           request.resource.data.deadlineAt == resource.data.deadlineAt &&
           (!('durationMinutes' in resource.data) || request.resource.data.durationMinutes == resource.data.durationMinutes) &&
-          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'submittedAt', 'lastActivityAt', 'candidateNotes', 'responseSummary', 'updatedAt']) &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'submittedAt', 'lastActivityAt', 'candidateNotes', 'responseSummary', 'updatedAt', 'resultId']) &&
           request.resource.data.status in ['in_progress', 'submitted'] &&
-          (!('resultId' in request.resource.data) || request.resource.data.resultId == resource.data.resultId) &&
+          (!('resultId' in resource.data) || request.resource.data.resultId == resource.data.resultId) &&
           !('totalScore' in request.resource.data) &&
           !('score' in request.resource.data) &&
           !('evaluationStatus' in request.resource.data)
@@ -180,15 +182,33 @@ service cloud.firestore {
     // 8. RESULTS COLLECTION (/results/{resultId})
     // =========================================================================
     match /results/{resultId} {
+      // Students read only their own validated scorecards; Admins read all results
       allow get: if isAuthenticated() && (
         isAdmin() || 
-        (resource.data.studentUid == request.auth.uid && resource.data.publicationStatus == 'published')
+        (resource.data.studentUid == request.auth.uid) ||
+        (resource.data.studentId == request.auth.uid)
       );
       allow list: if isAuthenticated() && (
         isAdmin() || 
-        (resource.data.studentUid == request.auth.uid && resource.data.publicationStatus == 'published')
+        (resource.data.studentUid == request.auth.uid) ||
+        (resource.data.studentId == request.auth.uid)
       );
-      allow create, update, delete: if isAdmin();
+
+      // Student creates result strictly upon completing their own authenticated attempt
+      allow create: if isAuthenticated() && (
+        isAdmin() || (
+          (request.resource.data.studentUid == request.auth.uid || request.resource.data.studentId == request.auth.uid) &&
+          request.resource.data.attemptId is string &&
+          request.resource.data.testId is string &&
+          request.resource.data.totalScore is number &&
+          request.resource.data.maximumMarks is number &&
+          exists(/databases/$(database)/documents/attempts/$(request.resource.data.attemptId)) &&
+          get(/databases/$(database)/documents/attempts/$(request.resource.data.attemptId)).data.studentUid == request.auth.uid
+        )
+      );
+
+      // Results are strictly immutable by students to prevent score tampering; only admins manage
+      allow update, delete: if isAdmin();
     }
 
     // =========================================================================

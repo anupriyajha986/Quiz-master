@@ -12,6 +12,7 @@ import {
 } from "../../services/firebase/examService";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../services/firebase/config";
+import { addBookmark } from "../../services/firebase/bookmarkService";
 import { useToast } from "../../context/ToastContext";
 import confetti from "canvas-confetti";
 import {
@@ -71,6 +72,27 @@ export default function ExamLivePage() {
   // Save status & Submission
   const [saveStatus, setSaveStatus] = useState("saved"); // 'saved' | 'saving' | 'error'
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [bookmarkedMap, setBookmarkedMap] = useState({});
+
+  const handleBookmarkCurrentQuestion = async () => {
+    if (!currentQuestion) return;
+    try {
+      await addBookmark({
+        questionId: currentQuestion.id,
+        questionText: currentQuestion.questionText,
+        testId: attempt?.testId || "",
+        testTitle: test?.title || attempt?.testTitle || "Examination",
+        subject: currentQuestion.subject || test?.subject || "General",
+        options: currentQuestion.options || [],
+        selectedAnswer: currentResponse?.selectedAnswer ?? null
+      });
+      setBookmarkedMap((prev) => ({ ...prev, [currentQuestion.id]: true }));
+      toast.success("Question saved to your revision vault!");
+    } catch (err) {
+      console.error("Failed to bookmark question:", err);
+      toast.error("Could not bookmark question.");
+    }
+  };
 
   // Modals & Panels State
   const [showSubmitModal, setShowSubmitModal] = useState(false);
@@ -540,7 +562,11 @@ export default function ExamLivePage() {
           {/* 3 BOTTOM SUPPORTING PANELS (Row 3, Exact Match with Reference Image) */}
           <div className="grid grid-cols-3 gap-4" id="notepad-panel">
             {/* 1. Question Information Card */}
-            <QuestionInformation question={currentQuestion} />
+            <QuestionInformation
+              question={currentQuestion}
+              onBookmark={handleBookmarkCurrentQuestion}
+              isBookmarked={!!bookmarkedMap[currentQuestion?.id]}
+            />
 
             {/* 2. Persistent Autosaved Notepad Card */}
             <ExamNotepad

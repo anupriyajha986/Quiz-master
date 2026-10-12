@@ -249,7 +249,16 @@ export async function submitAttempt(attemptId, responses, test, studentProfile) 
   }
 
   // Idempotent return if already submitted
+  const deterministicResultId = attempt.resultId || `result_${attemptId}`;
   if (attempt.status === "submitted") {
+    try {
+      const detSnap = await getDoc(doc(db, RESULTS_COL, deterministicResultId));
+      if (detSnap.exists()) {
+        return { resultId: detSnap.id, ...detSnap.data(), alreadySubmitted: true };
+      }
+    } catch (e) {
+      console.warn("Could not check deterministic result doc:", e);
+    }
     const qResult = query(collection(db, RESULTS_COL), where("attemptId", "==", attemptId));
     const rSnap = await getDocs(qResult);
     if (!rSnap.empty) {
@@ -288,25 +297,19 @@ export async function submitAttempt(attemptId, responses, test, studentProfile) 
     }
   });
 
-  // Authoritative submission timestamp
+  // Authoritative submission timestamp and elapsed time calculation
+  const startMs = attempt.startedAt ? new Date(attempt.startedAt).getTime() : Date.now();
+  const submitMs = Date.now();
+  const elapsedSec = Math.max(0, Math.floor((submitMs - startMs) / 1000));
+  const elapsedMins = Math.floor(elapsedSec / 60);
+  const remSec = elapsedSec % 60;
+  const timeTakenFormatted = `${elapsedMins}m ${remSec}s`;
   const submittedTimestamp = new Date().toISOString();
 
-  // 1. Finalize attempt status in Firestore
-  await updateDoc(attemptRef, {
-    status: "submitted",
-    submittedAt: submittedTimestamp,
-    lastActivityAt: serverTimestamp(),
-    responseSummary: {
-      answered: answeredCount,
-      unanswered: unansweredCount,
-      markedForReview: 0
-    }
-  });
-
-  // 2. Execute authoritative evaluation against answerKeys vault
+  // Execute authoritative evaluation against answerKeys vault BEFORE updating Firestore
   try {
     const answerKeyDoc = await getDoc(doc(db, "answerKeys", attempt.testId));
-    const answerKeyData = answerKeyDoc.exists() ? answerKeyDoc.data().answers : {};
+    const answerKeyData = answerKeyDoc.exists() ? (answerKeyDoc.data().answers || {}) : {};
 
     const evaluation = evaluateTestResponses(
       questions,
@@ -317,35 +320,69 @@ export async function submitAttempt(attemptId, responses, test, studentProfile) 
 
     const testTitle = resolvedTest?.title || resolvedTest?.name || attempt.testTitle || "Examination";
     const testSubject = resolvedTest?.subject || attempt.subject || "General";
-    const studentUid = attempt.studentUid || user.uid;
-    const resultRef = doc(collection(db, RESULTS_COL));
+    const studentUid = user.uid; // Always authenticated Firebase UID
+    const studentId = user.uid;  // Interoperability with queries expecting studentId
+
+    const passPct = Number(resolvedTest?.passPercentage || resolvedTest?.passingPercentage || resolvedTest?.cutoffPercentage) || 40;
+    const resultStatus = evaluation.percentage >= passPct ? "passed" : "failed";
+
+    const resultRef = doc(db, RESULTS_COL, deterministicResultId);
     const resultData = {
-      resultId: resultRef.id,
+      resultId: deterministicResultId,
+      id: deterministicResultId,
       attemptId,
       testId: attempt.testId,
+      examId: attempt.testId,
       testTitle,
+      examTitle: testTitle,
       subject: testSubject,
       studentUid,
-      studentName: studentProfile?.fullName || attempt.studentName || "Student",
+      studentId,
+      studentName: studentProfile?.fullName || attempt.studentName || user.displayName || "Student",
       rollNumber: studentProfile?.normalizedRollNumber || attempt.studentRollNumber || "",
       instituteName: studentProfile?.instituteName || attempt.instituteName || "",
       totalQuestions: questions.length,
+      attemptedCount: evaluation.attemptedCount,
+      attemptedQuestions: evaluation.attemptedCount,
       correctCount: evaluation.correctCount,
+      correctAnswers: evaluation.correctCount,
       incorrectCount: evaluation.incorrectCount,
+      incorrectAnswers: evaluation.incorrectCount,
       unansweredCount: evaluation.unansweredCount,
+      unansweredQuestions: evaluation.unansweredCount,
+      positiveMarks: evaluation.positiveMarks,
+      negativeMarks: evaluation.negativeMarks,
       totalScore: evaluation.totalScore,
+      finalScore: evaluation.totalScore,
       maximumMarks: evaluation.totalMaxMarks,
+      maximumPossibleMarks: evaluation.totalMaxMarks,
       percentage: evaluation.percentage,
       accuracy: evaluation.accuracy,
+      timeTaken: timeTakenFormatted,
+      timeTakenSeconds: elapsedSec,
+      resultStatus,
+      status: "evaluated",
       subjectBreakdown: evaluation.subjectBreakdown || {},
       evaluatedResponses: resolvedTest?.resultSettings?.showExplanations !== false ? (evaluation.evaluatedResponses || []) : [],
+      submittedAt: submittedTimestamp,
       evaluatedAt: new Date().toISOString(),
       publicationStatus: resolvedTest?.resultSettings?.showResultImmediately !== false ? "published" : "hidden"
     };
 
+    // Atomic batch write: Write result doc AND transition attempt to submitted in the same atomic commit
     const batch = writeBatch(db);
     batch.set(resultRef, resultData);
-    batch.update(attemptRef, { resultId: resultRef.id });
+    batch.update(attemptRef, {
+      status: "submitted",
+      submittedAt: submittedTimestamp,
+      lastActivityAt: serverTimestamp(),
+      resultId: deterministicResultId,
+      responseSummary: {
+        answered: answeredCount,
+        unanswered: unansweredCount,
+        markedForReview: 0
+      }
+    });
 
     const notifRef = doc(collection(db, "notifications"));
     batch.set(notifRef, {
@@ -353,16 +390,32 @@ export async function submitAttempt(attemptId, responses, test, studentProfile) 
       title: `Result Available: ${testTitle}`,
       message: `You scored ${evaluation.totalScore}/${evaluation.totalMaxMarks} (${evaluation.percentage}%). Click to view full report.`,
       type: "result",
-      referenceId: resultRef.id,
+      referenceId: deterministicResultId,
       isRead: false,
       createdAt: serverTimestamp()
     });
 
     await batch.commit();
-    return { resultId: resultRef.id, ...resultData };
+    return { success: true, resultId: deterministicResultId, ...resultData };
   } catch (evalErr) {
-    console.error("Evaluation failure:", evalErr);
+    console.error("Evaluation failure in submitAttempt:", evalErr);
     const testTitle = resolvedTest?.title || resolvedTest?.name || attempt.testTitle || "Examination";
+
+    // Fallback: Transition attempt to submitted if evaluation failed
+    try {
+      await updateDoc(attemptRef, {
+        status: "submitted",
+        submittedAt: submittedTimestamp,
+        lastActivityAt: serverTimestamp(),
+        responseSummary: {
+          answered: answeredCount,
+          unanswered: unansweredCount,
+          markedForReview: 0
+        }
+      });
+    } catch (attErr) {
+      console.warn("Could not update attempt in fallback:", attErr);
+    }
 
     // Fallback confirmation notification
     try {
@@ -401,6 +454,8 @@ export function evaluateTestResponses(questions, markingScheme, responses, answe
   let correctCount = 0;
   let incorrectCount = 0;
   let unansweredCount = 0;
+  let positiveMarks = 0;
+  let negativeMarks = 0;
   let totalScore = 0;
   let totalMaxMarks = 0;
 
@@ -435,16 +490,18 @@ export function evaluateTestResponses(questions, markingScheme, responses, answe
       status = "unanswered";
       subjectBreakdown[subj].unanswered += 1;
     } else if (Array.isArray(correctAnswer)) {
-      const studentArr = Array.isArray(selectedAnswer) ? selectedAnswer.sort().join(",") : selectedAnswer;
-      const correctArr = correctAnswer.sort().join(",");
+      const studentArr = Array.isArray(selectedAnswer) ? [...selectedAnswer].sort().join(",") : selectedAnswer;
+      const correctArr = [...correctAnswer].sort().join(",");
       if (studentArr === correctArr) {
         correctCount++;
         marksAwarded = pos;
+        positiveMarks += pos;
         status = "correct";
         subjectBreakdown[subj].correct += 1;
       } else {
         incorrectCount++;
         marksAwarded = -neg;
+        negativeMarks += neg;
         status = "incorrect";
         subjectBreakdown[subj].incorrect += 1;
       }
@@ -452,11 +509,13 @@ export function evaluateTestResponses(questions, markingScheme, responses, answe
       if (String(selectedAnswer).trim().toLowerCase() === String(correctAnswer).trim().toLowerCase()) {
         correctCount++;
         marksAwarded = pos;
+        positiveMarks += pos;
         status = "correct";
         subjectBreakdown[subj].correct += 1;
       } else {
         incorrectCount++;
         marksAwarded = -neg;
+        negativeMarks += neg;
         status = "incorrect";
         subjectBreakdown[subj].incorrect += 1;
       }
@@ -485,6 +544,9 @@ export function evaluateTestResponses(questions, markingScheme, responses, answe
     correctCount,
     incorrectCount,
     unansweredCount,
+    attemptedCount,
+    positiveMarks,
+    negativeMarks,
     totalScore,
     totalMaxMarks,
     percentage,
@@ -532,29 +594,58 @@ export async function adminForceSubmitAttempt(attemptId, { reason, adminUid, adm
   );
 
   const studentUid = attempt.studentUid;
+  const passPct = Number(test?.passPercentage || test?.passingPercentage || test?.cutoffPercentage) || 40;
+  const resultStatus = evaluation.percentage >= passPct ? "passed" : "failed";
+
+  const startMs = attempt.startedAt ? new Date(attempt.startedAt).getTime() : Date.now();
+  const submitMs = attempt.submittedAt ? new Date(attempt.submittedAt).getTime() : Date.now();
+  const elapsedSec = Math.max(0, Math.floor((submitMs - startMs) / 1000));
+  const elapsedMins = Math.floor(elapsedSec / 60);
+  const remSec = elapsedSec % 60;
+  const timeTakenFormatted = `${elapsedMins}m ${remSec}s`;
+
   const batch = writeBatch(db);
 
-  const resultRef = doc(collection(db, RESULTS_COL));
+  const resultId = attempt.resultId || `result_${attemptId}`;
+  const resultRef = doc(db, RESULTS_COL, resultId);
   const resultData = {
-    resultId: resultRef.id,
+    resultId,
+    id: resultId,
     attemptId,
     testId: attempt.testId,
+    examId: attempt.testId,
     testTitle: test.title,
+    examTitle: test.title,
     subject: test.subject || "General",
     studentUid,
+    studentId: studentUid,
     studentName: attempt.studentName || "Student",
     rollNumber: attempt.studentRollNumber || "",
     instituteName: attempt.instituteName || "",
     totalQuestions: (test.publishedQuestionsSnapshot || []).length,
+    attemptedCount: evaluation.attemptedCount,
+    attemptedQuestions: evaluation.attemptedCount,
     correctCount: evaluation.correctCount,
+    correctAnswers: evaluation.correctCount,
     incorrectCount: evaluation.incorrectCount,
+    incorrectAnswers: evaluation.incorrectCount,
     unansweredCount: evaluation.unansweredCount,
+    unansweredQuestions: evaluation.unansweredCount,
+    positiveMarks: evaluation.positiveMarks,
+    negativeMarks: evaluation.negativeMarks,
     totalScore: evaluation.totalScore,
+    finalScore: evaluation.totalScore,
     maximumMarks: evaluation.totalMaxMarks,
+    maximumPossibleMarks: evaluation.totalMaxMarks,
     percentage: evaluation.percentage,
     accuracy: evaluation.accuracy,
+    timeTaken: timeTakenFormatted,
+    timeTakenSeconds: elapsedSec,
+    resultStatus,
+    status: "evaluated",
     subjectBreakdown: evaluation.subjectBreakdown,
     evaluatedResponses: test.resultSettings?.showExplanations !== false ? evaluation.evaluatedResponses : [],
+    submittedAt: attempt.submittedAt || new Date().toISOString(),
     evaluatedAt: new Date().toISOString(),
     publicationStatus: test.resultSettings?.showResultImmediately !== false ? "published" : "hidden",
     reconciledByAdmin: true,

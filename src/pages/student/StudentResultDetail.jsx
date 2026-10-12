@@ -19,16 +19,21 @@ import {
   HelpCircle,
   AlertCircle
 } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
 
 export default function StudentResultDetail() {
   const { resultId } = useParams();
+  const { currentUser, isAdmin } = useAuth();
   const [result, setResult] = useState(null);
   const [attempt, setAttempt] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [unauthorized, setUnauthorized] = useState(false);
 
   useEffect(() => {
     async function loadRecord() {
+      if (!currentUser?.uid) return;
       setLoading(true);
+      setUnauthorized(false);
       try {
         // 1. Attempt to fetch result directly by ID
         let resData = await getResultById(resultId);
@@ -39,11 +44,23 @@ export default function StudentResultDetail() {
         }
 
         if (resData) {
+          // Ownership verification
+          if (!isAdmin && resData.studentUid !== currentUser.uid) {
+            setUnauthorized(true);
+            setResult(null);
+            return;
+          }
           setResult(resData);
         } else {
           // 3. Fallback: check if param is a submitted attempt awaiting evaluation
           const attData = await getAttemptById(resultId);
           if (attData) {
+            // Ownership verification
+            if (!isAdmin && attData.studentUid !== currentUser.uid) {
+              setUnauthorized(true);
+              setAttempt(null);
+              return;
+            }
             setAttempt(attData);
           }
         }
@@ -54,7 +71,7 @@ export default function StudentResultDetail() {
       }
     }
     loadRecord();
-  }, [resultId]);
+  }, [resultId, currentUser, isAdmin]);
 
   if (loading) {
     return (
@@ -225,7 +242,20 @@ export default function StudentResultDetail() {
     );
   }
 
-  // 5. Default: Not found
+  // 5. Unauthorized access attempted
+  if (unauthorized) {
+    return (
+      <EmptyState
+        icon={AlertCircle}
+        title="Access Denied"
+        description="You do not have permission to access another candidate's private examination scorecard."
+        actionLabel="Return to My Results"
+        actionHref="/student/results"
+      />
+    );
+  }
+
+  // 6. Default: Not found
   return (
     <EmptyState
       icon={Award}

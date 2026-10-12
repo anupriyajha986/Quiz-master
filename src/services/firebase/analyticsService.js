@@ -7,7 +7,7 @@ import {
   where,
   orderBy
 } from "firebase/firestore";
-import { db } from "./config.js";
+import { db, auth } from "./config.js";
 
 export async function getAdminDashboardStats() {
   const [usersSnap, subjectsSnap, questionSetsSnap, testsSnap, questionsSnap, attemptsSnap, resultsSnap] = await Promise.all([
@@ -294,7 +294,7 @@ export async function getStudentDashboardStats(studentUid) {
   const [testsSnap, attemptsSnap, resultsSnap] = await Promise.all([
     getDocs(query(collection(db, "tests"), where("publicationStatus", "==", "published"))),
     getDocs(query(collection(db, "attempts"), where("studentUid", "==", studentUid))),
-    getDocs(query(collection(db, "results"), where("studentUid", "==", studentUid)))
+    getDocs(query(collection(db, "results"), where("studentUid", "==", studentUid), where("publicationStatus", "==", "published")))
   ]);
 
   const tests = testsSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
@@ -397,16 +397,33 @@ export async function getStudentDashboardStats(studentUid) {
     return deadlineMs > now;
   });
 
+  const percentages = results.map((r) => Number(r.percentage) || 0);
+  const highestPercentage = percentages.length > 0 ? Math.round(Math.max(...percentages)) : 0;
+  const lowestPercentage = percentages.length > 0 ? Math.round(Math.min(...percentages)) : 0;
+
+  let totalIncorrect = 0;
+  let totalUnanswered = 0;
+  results.forEach((r) => {
+    totalIncorrect += Number(r.incorrectCount) || 0;
+    totalUnanswered += Number(r.unansweredCount) || 0;
+  });
+
   return {
     availableTestsCount: tests.length,
     completedTestsCount: results.length,
     averagePercentage: averagePercentage,
     overallAccuracy: overallAccuracy,
+    highestPercentage,
+    lowestPercentage,
+    totalCorrect,
+    totalIncorrect,
+    totalUnanswered,
     scoreTrends,
     subjectBreakdown: subjectAgg,
     recentActivity: recentActivity.slice(0, 4),
     activeAttempt,
-    recentResults: results.slice(-5).reverse()
+    recentResults: results.slice(-5).reverse(),
+    allResults: results
   };
 }
 
@@ -429,10 +446,54 @@ export async function getResultById(resultId) {
 }
 
 export async function getResultByAttemptId(attemptId) {
-  const q = query(collection(db, "results"), where("attemptId", "==", attemptId));
-  const snap = await getDocs(q);
-  if (snap.empty) return null;
-  return { id: snap.docs[0].id, ...snap.docs[0].data() };
+  if (!attemptId) return null;
+
+  // 1. Check deterministic result document ID first
+  try {
+    const detSnap = await getDoc(doc(db, "results", `result_${attemptId}`));
+    if (detSnap.exists()) {
+      return { id: detSnap.id, ...detSnap.data() };
+    }
+  } catch (e) {
+    // Continue fallback
+  }
+
+  // 2. Query results collection with security rule compliance
+  const user = auth.currentUser;
+  try {
+    if (user) {
+      const qUid = query(
+        collection(db, "results"),
+        where("studentUid", "==", user.uid),
+        where("attemptId", "==", attemptId)
+      );
+      const snapUid = await getDocs(qUid);
+      if (!snapUid.empty) {
+        return { id: snapUid.docs[0].id, ...snapUid.docs[0].data() };
+      }
+
+      const qId = query(
+        collection(db, "results"),
+        where("studentId", "==", user.uid),
+        where("attemptId", "==", attemptId)
+      );
+      const snapId = await getDocs(qId);
+      if (!snapId.empty) {
+        return { id: snapId.docs[0].id, ...snapId.docs[0].data() };
+      }
+    }
+
+    // Admin fallback query
+    const qAdmin = query(collection(db, "results"), where("attemptId", "==", attemptId));
+    const snapAdmin = await getDocs(qAdmin);
+    if (!snapAdmin.empty) {
+      return { id: snapAdmin.docs[0].id, ...snapAdmin.docs[0].data() };
+    }
+  } catch (err) {
+    console.warn("Could not fetch result by attemptId:", err);
+  }
+
+  return null;
 }
 
 export async function getTestLeaderboard(testId) {

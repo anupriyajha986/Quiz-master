@@ -26,7 +26,9 @@ import {
   Filter,
   CheckCircle,
   Layers,
-  Sparkles
+  Sparkles,
+  Calendar,
+  AlertCircle
 } from "lucide-react";
 
 export default function AvailableExams() {
@@ -36,10 +38,12 @@ export default function AvailableExams() {
   const [myAttempts, setMyAttempts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Filters
+  // Filters & Sorting
   const [selectedSubject, setSelectedSubject] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [filterDifficulty, setFilterDifficulty] = useState("all");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [sortBy, setSortBy] = useState("newest");
 
   useEffect(() => {
     async function loadData() {
@@ -51,11 +55,11 @@ export default function AvailableExams() {
           getStudentAttempts(currentUser.uid),
           getSubjects("active")
         ]);
-        setTests(testsData);
-        setMyAttempts(attemptsData);
-        setSubjects(subjectsData);
+        setTests(testsData || []);
+        setMyAttempts(attemptsData || []);
+        setSubjects(subjectsData || []);
       } catch (err) {
-        console.error(err);
+        console.error("Failed to load available exams:", err);
       } finally {
         setLoading(false);
       }
@@ -73,9 +77,11 @@ export default function AvailableExams() {
     return counts;
   }, [tests]);
 
-  // Filtered tests
+  // Filtered and Sorted tests
   const filteredTests = useMemo(() => {
-    return tests.filter((test) => {
+    const now = Date.now();
+
+    const filtered = tests.filter((test) => {
       // Subject filter
       if (selectedSubject !== "all") {
         const testSubj = (test.subject || "").toLowerCase();
@@ -87,8 +93,31 @@ export default function AvailableExams() {
 
       // Difficulty filter
       if (filterDifficulty !== "all") {
-        if ((test.difficulty || "easy").toLowerCase() !== filterDifficulty.toLowerCase()) {
+        if ((test.difficulty || "medium").toLowerCase() !== filterDifficulty.toLowerCase()) {
           return false;
+        }
+      }
+
+      // Status filter
+      if (filterStatus !== "all") {
+        const attemptsForTest = myAttempts.filter((a) => a.testId === test.id);
+        const inProgress = attemptsForTest.some(
+          (a) => a.status === "in_progress" && new Date(a.deadlineAt).getTime() > now
+        );
+        const submittedCount = attemptsForTest.filter((a) => a.status === "submitted").length;
+        const limit = Number(test.attemptLimit) || 2;
+
+        const startAtMs = test.startAt ? new Date(test.startAt).getTime() : 0;
+        const endAtMs = test.endAt ? new Date(test.endAt).getTime() : 0;
+        const isUpcoming = startAtMs > 0 && startAtMs > now;
+        const isExpired = endAtMs > 0 && endAtMs < now;
+
+        if (filterStatus === "in_progress" && !inProgress) return false;
+        if (filterStatus === "completed" && submittedCount === 0) return false;
+        if (filterStatus === "upcoming" && !isUpcoming) return false;
+        if (filterStatus === "expired" && !isExpired) return false;
+        if (filterStatus === "available") {
+          if (inProgress || isUpcoming || isExpired || submittedCount >= limit) return false;
         }
       }
 
@@ -103,7 +132,31 @@ export default function AvailableExams() {
 
       return true;
     });
-  }, [tests, selectedSubject, filterDifficulty, searchTerm]);
+
+    // Sorting
+    filtered.sort((a, b) => {
+      if (sortBy === "title_asc") {
+        return (a.title || "").localeCompare(b.title || "");
+      }
+      if (sortBy === "duration_asc") {
+        return (a.durationMinutes || 0) - (b.durationMinutes || 0);
+      }
+      if (sortBy === "duration_desc") {
+        return (b.durationMinutes || 0) - (a.durationMinutes || 0);
+      }
+      if (sortBy === "questions_desc") {
+        const qA = a.questionCount || a.questionIds?.length || 0;
+        const qB = b.questionCount || b.questionIds?.length || 0;
+        return qB - qA;
+      }
+      // default: newest
+      const tA = a.createdAt?.toMillis ? a.createdAt.toMillis() : new Date(a.createdAt || 0).getTime();
+      const tB = b.createdAt?.toMillis ? b.createdAt.toMillis() : new Date(b.createdAt || 0).getTime();
+      return tB - tA;
+    });
+
+    return filtered;
+  }, [tests, selectedSubject, filterDifficulty, filterStatus, searchTerm, sortBy, myAttempts]);
 
   return (
     <div className="space-y-6">
@@ -111,13 +164,13 @@ export default function AvailableExams() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white border border-[#E2E8F0] rounded-2xl p-6 shadow-xs">
         <div>
           <span className="text-[11px] font-bold text-[#2563EB] uppercase tracking-wider flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5" /> Examination Hall &bull; Subject-Wise Question Sets
+            <Sparkles className="w-3.5 h-3.5" /> Examination Discovery &bull; Official Test Papers
           </span>
           <h1 className="text-2xl font-black text-[#111827] tracking-tight mt-0.5">
-            Available Examination Sets
+            Explore Examinations
           </h1>
-          <p className="text-xs text-[#64748B] mt-1">
-            Browse published examination papers organized by subject and set number. Attempt questions with official marking scheme (+4 / -1).
+          <p className="text-xs text-[#64748B] mt-1 max-w-2xl leading-relaxed">
+            Browse published examination papers across core subjects. Start an active assessment, resume a session, or review past completions.
           </p>
         </div>
 
@@ -179,28 +232,59 @@ export default function AvailableExams() {
         })}
       </div>
 
-      {/* Search and Secondary Filter */}
+      {/* Search and Advanced Filters */}
       <Card className="p-4">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="sm:col-span-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3">
+          <div className="lg:col-span-5">
             <Input
               icon={Search}
-              placeholder="Search set title, topics, or instructions..."
+              placeholder="Search by title, subject, or description..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
-          <Select
-            value={filterDifficulty}
-            onChange={(e) => setFilterDifficulty(e.target.value)}
-            options={[
-              { value: "all", label: "All Difficulties" },
-              { value: "easy", label: "Easy" },
-              { value: "medium", label: "Medium" },
-              { value: "hard", label: "Hard" }
-            ]}
-          />
+          <div className="lg:col-span-2">
+            <Select
+              value={filterDifficulty}
+              onChange={(e) => setFilterDifficulty(e.target.value)}
+              options={[
+                { value: "all", label: "All Difficulties" },
+                { value: "easy", label: "Easy" },
+                { value: "medium", label: "Medium" },
+                { value: "hard", label: "Hard" }
+              ]}
+            />
+          </div>
+
+          <div className="lg:col-span-2">
+            <Select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              options={[
+                { value: "all", label: "All Statuses" },
+                { value: "available", label: "Available to Start" },
+                { value: "in_progress", label: "In Progress" },
+                { value: "completed", label: "Completed" },
+                { value: "upcoming", label: "Upcoming" },
+                { value: "expired", label: "Window Closed" }
+              ]}
+            />
+          </div>
+
+          <div className="lg:col-span-3">
+            <Select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              options={[
+                { value: "newest", label: "Sort: Newest First" },
+                { value: "title_asc", label: "Sort: Title (A-Z)" },
+                { value: "duration_asc", label: "Sort: Shortest Duration" },
+                { value: "duration_desc", label: "Sort: Longest Duration" },
+                { value: "questions_desc", label: "Sort: Most Questions" }
+              ]}
+            />
+          </div>
         </div>
       </Card>
 
@@ -214,11 +298,11 @@ export default function AvailableExams() {
       ) : filteredTests.length === 0 ? (
         <EmptyState
           icon={FileCheck2}
-          title="No Matching Examination Sets Found"
+          title="No Matching Examinations Found"
           description={
-            searchTerm || selectedSubject !== "all"
-              ? "Try resetting your search query or subject filter."
-              : "There are currently no examination sets scheduled or published. Please check back later."
+            searchTerm || selectedSubject !== "all" || filterDifficulty !== "all" || filterStatus !== "all"
+              ? "Try resetting your search query or adjusting your filters."
+              : "There are currently no examination sets published. Please check back later."
           }
         />
       ) : (
@@ -235,24 +319,52 @@ export default function AvailableExams() {
             const limit = Number(test.attemptLimit) || 2;
             const canAttempt = submittedCount < limit;
 
+            const startAtMs = test.startAt ? new Date(test.startAt).getTime() : 0;
+            const endAtMs = test.endAt ? new Date(test.endAt).getTime() : 0;
+            const isUpcoming = startAtMs > 0 && startAtMs > now;
+            const isExpired = endAtMs > 0 && endAtMs < now;
+
             const qCount = test.questionCount || test.questionIds?.length || 20;
             const marks = test.maximumMarks || qCount * 4;
 
             return (
               <Card key={test.id} className="p-6 flex flex-col justify-between hover:border-[#CBD5E1] transition-all hover:shadow-xs">
                 <div>
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center justify-between mb-3 gap-2">
                     <Badge variant="primary">{test.subject || "General"}</Badge>
-                    <span className="text-xs font-black text-[#16A34A] bg-[#DCFCE7] px-2.5 py-0.5 rounded-full border border-[#BBF7D0]">
-                      {marks} Marks
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      {inProgress ? (
+                        <span className="text-[10px] font-black text-[#0866F5] bg-[#EAF2FF] px-2 py-0.5 rounded-full border border-[#BFDBFE]">
+                          In Progress
+                        </span>
+                      ) : isUpcoming ? (
+                        <span className="text-[10px] font-black text-[#D97706] bg-[#FEF3C7] px-2 py-0.5 rounded-full border border-[#FDE68A]">
+                          Scheduled
+                        </span>
+                      ) : isExpired ? (
+                        <span className="text-[10px] font-black text-[#64748B] bg-[#F1F5F9] px-2 py-0.5 rounded-full border border-[#E2E8F0]">
+                          Closed
+                        </span>
+                      ) : submittedCount >= limit ? (
+                        <span className="text-[10px] font-black text-[#15803D] bg-[#DCFCE7] px-2 py-0.5 rounded-full border border-[#BBF7D0]">
+                          Completed
+                        </span>
+                      ) : (
+                        <span className="text-[10px] font-black text-[#16A34A] bg-[#DCFCE7] px-2 py-0.5 rounded-full border border-[#BBF7D0]">
+                          Available
+                        </span>
+                      )}
+                      <span className="text-xs font-black text-[#16A34A] bg-[#DCFCE7] px-2 py-0.5 rounded-full border border-[#BBF7D0]">
+                        {marks} Marks
+                      </span>
+                    </div>
                   </div>
 
                   <h3 className="text-base font-black text-[#111827] line-clamp-1 mb-1">
                     {test.title}
                   </h3>
                   <p className="text-xs text-[#64748B] line-clamp-2 mb-4 leading-relaxed">
-                    {test.description || `Evaluation exam for ${test.subject} core competencies.`}
+                    {test.description || `Official evaluation examination covering ${test.subject || "computer science"} concepts.`}
                   </p>
 
                   <div className="grid grid-cols-3 gap-2 p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-center mb-4 text-xs">
@@ -273,39 +385,49 @@ export default function AvailableExams() {
                   </div>
                 </div>
 
-                  <div className="pt-4 border-t border-[#E2E8F0] flex items-center justify-between">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[11px] text-[#64748B]">
-                        Attempts: <strong className="text-[#111827]">{submittedCount}</strong>/{limit}
-                      </span>
-                    </div>
+                <div className="pt-4 border-t border-[#E2E8F0] space-y-2.5">
+                  <div className="flex items-center justify-between text-[11px] text-[#64748B]">
+                    <span>
+                      Attempts Taken: <strong className="text-[#111827]">{submittedCount}</strong> / {limit}
+                    </span>
+                    <Link
+                      to={`/student/exams/${test.id}/instructions`}
+                      className="text-[#2563EB] hover:underline font-semibold"
+                    >
+                      Instructions
+                    </Link>
+                  </div>
 
+                  <div className="flex items-center justify-end gap-2">
                     {inProgress ? (
-                      <Link to={`/student/attempts/${inProgress.id}`}>
-                        <Button size="sm" variant="success" icon={Play}>
-                          Resume Test
+                      <Link to={`/student/attempts/${inProgress.id}`} className="w-full">
+                        <Button size="sm" variant="success" icon={Play} className="w-full justify-center">
+                          Resume Test Session
                         </Button>
                       </Link>
                     ) : isUpcoming ? (
-                      <Badge variant="primary" size="xs">
-                        Scheduled {test.startAt ? new Date(test.startAt).toLocaleDateString() : ""}
-                      </Badge>
+                      <Button size="sm" variant="outline" disabled className="w-full justify-center">
+                        Scheduled for {test.startAt ? new Date(test.startAt).toLocaleDateString() : "Later"}
+                      </Button>
                     ) : isExpired ? (
-                      <Badge variant="default" size="xs">
-                        Window Closed
-                      </Badge>
+                      <Button size="sm" variant="outline" disabled className="w-full justify-center">
+                        Exam Window Closed
+                      </Button>
                     ) : canAttempt ? (
-                      <Link to={`/student/exams/${test.id}/instructions`}>
-                        <Button size="sm" icon={submittedCount > 0 ? RotateCcw : Play}>
-                          {submittedCount > 0 ? "Retake Set" : "Start Set"}
+                      <Link to={`/student/exams/${test.id}/instructions`} className="w-full">
+                        <Button size="sm" icon={submittedCount > 0 ? RotateCcw : Play} className="w-full justify-center">
+                          {submittedCount > 0 ? "Retake Exam" : "Start Exam"}
                         </Button>
                       </Link>
                     ) : (
-                      <Badge variant="default" size="xs">
-                        Attempts Exhausted
-                      </Badge>
+                      <Link to="/student/results" className="w-full">
+                        <Button size="sm" variant="secondary" icon={Award} className="w-full justify-center">
+                          View Results
+                        </Button>
+                      </Link>
                     )}
                   </div>
+                </div>
               </Card>
             );
           })}

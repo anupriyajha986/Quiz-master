@@ -122,14 +122,21 @@ export default function ScorecardReport({ result, backUrl, isAdmin = false }) {
             <span className="text-[10px] font-mono text-[#64748B] block">
               Reference: {result.id || result.resultId}
             </span>
-            <Badge variant="success" size="xs" className="mt-1">
-              AUTHENTICATED RECORD
-            </Badge>
+            <div className="flex items-center gap-1.5 justify-end mt-1">
+              <Badge variant="success" size="xs">
+                AUTHENTICATED RECORD
+              </Badge>
+              {result.resultStatus && (
+                <Badge variant={result.resultStatus === "passed" ? "success" : "danger"} size="xs">
+                  {result.resultStatus.toUpperCase()}
+                </Badge>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Candidate Profile Info Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-xs">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 p-5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-xs">
           <div>
             <span className="text-[#64748B] block">Candidate Name</span>
             <span className="font-bold text-[#111827] text-sm mt-0.5 block">
@@ -154,7 +161,14 @@ export default function ScorecardReport({ result, backUrl, isAdmin = false }) {
           <div>
             <span className="text-[#64748B] block">Examination Date</span>
             <span className="font-semibold text-[#111827] mt-0.5 block">
-              {formatDate(result.evaluatedAt)}
+              {formatDate(result.evaluatedAt || result.submittedAt)}
+            </span>
+          </div>
+
+          <div>
+            <span className="text-[#64748B] block">Time Taken</span>
+            <span className="font-semibold text-[#111827] mt-0.5 block">
+              {result.timeTaken || "Session Duration"}
             </span>
           </div>
         </div>
@@ -184,7 +198,7 @@ export default function ScorecardReport({ result, backUrl, isAdmin = false }) {
               {result.totalScore}
             </div>
             <span className="text-[11px] text-[#64748B] font-medium block mt-1">
-              out of {result.maximumMarks} Marks
+              {result.positiveMarks !== undefined ? `+${result.positiveMarks} / -${result.negativeMarks || 0} (out of ${result.maximumMarks})` : `out of ${result.maximumMarks} Marks`}
             </span>
           </div>
 
@@ -196,7 +210,7 @@ export default function ScorecardReport({ result, backUrl, isAdmin = false }) {
               {result.percentage}%
             </div>
             <span className="text-[11px] text-[#64748B] font-medium block mt-1">
-              Aggregate Mark
+              {result.resultStatus ? `Status: ${result.resultStatus.toUpperCase()}` : "Aggregate Mark"}
             </span>
           </div>
 
@@ -208,7 +222,7 @@ export default function ScorecardReport({ result, backUrl, isAdmin = false }) {
               {result.accuracy}%
             </div>
             <span className="text-[11px] text-[#64748B] font-medium block mt-1">
-              Correct Attempt Ratio
+              {result.attemptedCount || (result.correctCount + result.incorrectCount)} of {result.totalQuestions} Attempted
             </span>
           </div>
 
@@ -220,7 +234,7 @@ export default function ScorecardReport({ result, backUrl, isAdmin = false }) {
               {result.totalQuestions}
             </div>
             <span className="text-[11px] text-[#64748B] font-medium block mt-1">
-              Full Paper Count
+              {result.timeTaken ? `Duration: ${result.timeTaken}` : "Full Paper Count"}
             </span>
           </div>
         </div>
