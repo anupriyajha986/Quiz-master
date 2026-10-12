@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, getDoc, updateDoc, setDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { startAttempt, saveResponse, submitAttempt } from "../src/services/firebase/examService.js";
-import { getTestById } from "../src/services/firebase/testService.js";
+import { getTestById, getStudentAvailableTests } from "../src/services/firebase/testService.js";
 import { getStudentResults } from "../src/services/firebase/studentService.js";
 import { getResultById, getResultByAttemptId, getAllResults } from "../src/services/firebase/analyticsService.js";
 import { auth, db } from "../src/services/firebase/config.js";
@@ -23,17 +23,41 @@ async function runE2ETests() {
   const studentAUid = studentACred.user.uid;
   console.log("✓ Student A authenticated:", studentACred.user.email, "(UID:", studentAUid, ")");
 
-  const testId = "html-set-2";
-  const test = await getTestById(testId);
-  console.log("✓ Examination loaded:", test.title, `(${test.questionCount} questions, Max: ${test.maximumMarks})`);
-
   const studentProfile = {
     fullName: "Aryan Sharma",
     normalizedRollNumber: "QM2026-001",
     instituteName: "QuizMaster Tech Academy"
   };
 
-  const { attempt, isResumed } = await startAttempt(testId, studentProfile, test);
+  const availableTests = await getStudentAvailableTests();
+  let testId = null;
+  let test = null;
+  let attemptObj = null;
+
+  for (const t of availableTests) {
+    try {
+      const fullTest = await getTestById(t.id);
+      if (!fullTest || (fullTest.publishedQuestionsSnapshot?.length || 0) < 2) continue;
+      const keyDoc = await getDoc(doc(db, "answerKeys", t.id));
+      if (!keyDoc.exists()) continue;
+
+      const res = await startAttempt(t.id, studentProfile, fullTest);
+      testId = t.id;
+      test = fullTest;
+      attemptObj = res;
+      break;
+    } catch (err) {
+      // Continue to next available test if attempt limit reached
+      continue;
+    }
+  }
+
+  if (!attemptObj) {
+    throw new Error("No eligible published test found with available attempts for Student A.");
+  }
+
+  console.log("✓ Examination loaded:", test.title, `(${test.questionCount || test.publishedQuestionsSnapshot.length} questions, Max: ${test.maximumMarks})`);
+  const { attempt, isResumed } = attemptObj;
   studentAAttemptId = attempt.id;
   console.log("✓ Attempt record active:", studentAAttemptId, `(Resumed: ${isResumed})`);
 
@@ -50,7 +74,8 @@ async function runE2ETests() {
   const q1 = questions[0];
   const q2 = questions[1];
   const q1Correct = answers[q1.id]?.correctAnswer || "A";
-  const q2Wrong = q1Correct === "A" ? "B" : "A";
+  const q2Correct = answers[q2.id]?.correctAnswer || "A";
+  const q2Wrong = ["A", "B", "C", "D"].find(opt => String(opt).toUpperCase() !== String(q2Correct).toUpperCase()) || "INCORRECT_ANSWER";
 
   const responses = {
     [q1.id]: { selectedAnswer: q1Correct, markedForReview: false },
