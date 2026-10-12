@@ -524,7 +524,7 @@ export default function AdminUsers() {
           onClose={() => setInviteModalOpen(false)}
           title="Provision New Administrator"
         >
-          <form onSubmit={handleInviteAdmin || handleProvisionStaff} className="space-y-4 text-xs max-h-[80vh] overflow-y-auto pr-1">
+          <form onSubmit={handleProvisionStaff} className="space-y-4 text-xs max-h-[80vh] overflow-y-auto pr-1">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-bold text-[#172B4D] mb-1">
