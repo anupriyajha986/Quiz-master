@@ -68,7 +68,7 @@ export default function StudentDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* 1. Large Welcome Banner with Photo & Date Card */}
+      {/* 1. Large Welcome Banner & Date Card */}
       <WelcomeBanner studentName={studentName} />
 
       {/* 2. Four Summary Statistic Cards */}

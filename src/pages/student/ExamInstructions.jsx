@@ -28,6 +28,7 @@ export default function ExamInstructions() {
   const { currentUser, userProfile } = useAuth();
   const [test, setTest] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [starting, setStarting] = useState(false);
 
@@ -40,13 +41,13 @@ export default function ExamInstructions() {
       try {
         const data = await getTestById(testId);
         if (!data || data.publicationStatus !== "published") {
-          toast.error("This examination is not currently available.");
-          navigate("/student/exams");
+          setNotFound(true);
           return;
         }
         setTest(data);
       } catch (err) {
         console.error(err);
+        setNotFound(true);
         toast.error("Failed to load test details.");
       } finally {
         setLoading(false);
@@ -83,7 +84,28 @@ export default function ExamInstructions() {
     );
   }
 
-  if (!test) return null;
+  if (notFound || !test) {
+    return (
+      <div className="max-w-xl mx-auto py-12 px-4">
+        <Card className="text-center p-8 border border-slate-200">
+          <div className="w-14 h-14 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <AlertTriangle className="w-7 h-7" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">Examination Unavailable</h2>
+          <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+            This examination is not available, has been removed, or does not exist. Please browse the active examinations in your student portal.
+          </p>
+          <Button
+            variant="primary"
+            onClick={() => navigate("/student/exams")}
+            className="w-full justify-center"
+          >
+            Explore Available Examinations
+          </Button>
+        </Card>
+      </div>
+    );
+  }
 
   const pos = test.markingScheme?.positiveMarks || 4;
   const neg = test.markingScheme?.negativeMarks || 1;

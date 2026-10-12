@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Sun, ArrowRight, BarChart2, Calendar } from "lucide-react";
+import { Sun, ArrowRight, Calendar } from "lucide-react";
 
 export default function WelcomeBanner({ studentName = "Student" }) {
   // Time-aware greeting
@@ -22,13 +22,13 @@ export default function WelcomeBanner({ studentName = "Student" }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-stretch">
       {/* Main Welcome Hero Banner (9 cols on desktop) */}
-      <div className="lg:col-span-9 bg-gradient-to-r from-white via-[#F8FAFD] to-[#EBF3FE] rounded-3xl p-6 sm:p-8 border border-[#E5ECF5] shadow-xs relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div className="lg:col-span-9 bg-gradient-to-r from-white via-[#F8FAFD] to-[#EBF3FE] rounded-3xl p-6 sm:p-8 border border-[#E5ECF5] shadow-xs relative overflow-hidden flex flex-col justify-center">
         {/* Soft Decorative Ambient Halos */}
         <div className="absolute top-0 right-1/4 w-72 h-72 rounded-full bg-[#38BDF8]/15 blur-3xl -z-0 pointer-events-none"></div>
         <div className="absolute bottom-0 right-0 w-60 h-60 rounded-full bg-[#34D399]/15 blur-2xl -z-0 pointer-events-none"></div>
 
         {/* Left Text Content */}
-        <div className="relative z-10 max-w-md text-left">
+        <div className="relative z-10 max-w-xl text-left">
           <div className="flex items-center gap-2 text-xs font-bold text-[#F59E0B] mb-2">
             <Sun className="w-4 h-4 fill-[#F59E0B]" />
             <span>{getGreeting()}</span>
@@ -49,34 +49,6 @@ export default function WelcomeBanner({ studentName = "Student" }) {
             <span>Explore Exams</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
-        </div>
-
-        {/* Center/Right Student Photo Visual with Floating Quote */}
-        <div className="relative z-10 shrink-0 flex items-center justify-center">
-          {/* Floating Quote Badge */}
-          <div className="hidden sm:flex absolute -top-4 -right-2 bg-white/95 backdrop-blur-md rounded-2xl p-3 shadow-md border border-[#E5ECF5] items-center gap-2.5 z-20">
-            <div className="w-8 h-8 rounded-lg bg-[#EAF2FF] text-[#0866F5] flex items-center justify-center">
-              <BarChart2 className="w-4 h-4" />
-            </div>
-            <div className="text-left">
-              <p className="text-[11px] font-bold text-[#111A36] leading-tight">
-                "Small Steps
-              </p>
-              <p className="text-[11px] font-black text-[#0866F5]">
-                Make Big Results"
-              </p>
-            </div>
-          </div>
-
-          {/* Student Cutout / Photo */}
-          <div className="relative w-44 h-48 sm:w-56 sm:h-56 rounded-2xl overflow-hidden bg-gradient-to-t from-[#0866F5]/20 to-transparent">
-            <img
-              src="/images/student/student-banner.jpg"
-              alt="Student smiling"
-              className="w-full h-full object-cover object-top"
-              loading="eager"
-            />
-          </div>
         </div>
       </div>
 

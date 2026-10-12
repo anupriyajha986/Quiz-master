@@ -30,6 +30,18 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// Safeguard against running legacy JEE mock seed against live database
+if (!process.argv.includes("--force") && process.env.ALLOW_LEGACY_SEED !== "true") {
+  console.error("================================================================================");
+  console.error("❌ SAFETY CHECK BLOCKED: LEGACY SEED SCRIPT CANNOT BE RUN ACCIDENTALLY");
+  console.error("================================================================================");
+  console.error("seed-and-provision.js is a legacy seed script containing non-curriculum Physics/Chemistry/Maths.");
+  console.error("QuizMaster now uses the Computer Science Question Bank (HTML, CSS, JS, DSA, DBMS, COA, OS, C).");
+  console.error("To override and run intentionally, use: node scripts/seed-and-provision.js --force");
+  console.error("================================================================================");
+  process.exit(1);
+}
+
 async function getOrCreateUser(email, password, profile) {
   let user;
   try {

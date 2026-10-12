@@ -45,10 +45,15 @@ export async function getTestById(id) {
     if (!snap.exists()) return null;
     return { id: snap.id, ...snap.data() };
   } catch (err) {
-    if (err?.code === "permission-denied" || err?.message?.includes("permissions")) {
-      const serverSnap = await getDocFromServer(docRef);
-      if (!serverSnap.exists()) return null;
-      return { id: serverSnap.id, ...serverSnap.data() };
+    if (err?.code === "permission-denied" || err?.message?.includes("permission")) {
+      try {
+        const serverSnap = await getDocFromServer(docRef);
+        if (!serverSnap.exists()) return null;
+        return { id: serverSnap.id, ...serverSnap.data() };
+      } catch {
+        // Document does not exist or user lacks permission to access deleted/non-existent test
+        return null;
+      }
     }
     throw err;
   }
